@@ -55,6 +55,239 @@
             color: var(--text);
             transition: background 0.2s, color 0.2s;
         }
+
+        /* ===== TELA DE LOGIN ===== */
+        .login-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 30%, #0f172a 60%, #1a1a2e 100%);
+            background-size: 400% 400%;
+            animation: loginBgShift 12s ease infinite;
+            transition: opacity 0.6s ease, visibility 0.6s ease;
+        }
+        .login-overlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        @keyframes loginBgShift {
+            0%,
+            100% {
+                background-position: 0% 50%;
+            }
+            25% {
+                background-position: 100% 0%;
+            }
+            50% {
+                background-position: 100% 100%;
+            }
+            75% {
+                background-position: 0% 100%;
+            }
+        }
+        .login-particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        .login-particle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(99, 102, 241, 0.3);
+            animation: floatUp linear infinite;
+        }
+        @keyframes floatUp {
+            0% {
+                transform: translateY(100vh) scale(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-10vh) scale(1.5);
+                opacity: 0;
+            }
+        }
+        .login-card {
+            position: relative;
+            z-index: 2;
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 28px;
+            padding: 40px 36px;
+            width: 90%;
+            max-width: 420px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            text-align: center;
+            animation: loginCardIn 0.7s cubic-bezier(0.22, 0.61, 0.36, 1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .login-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+        }
+        @keyframes loginCardIn {
+            from {
+                opacity: 0;
+                transform: translateY(40px) scale(0.92);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        .login-card.shake {
+            animation: shake 0.5s ease;
+        }
+        @keyframes shake {
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+            10%,
+            50%,
+            90% {
+                transform: translateX(-8px);
+            }
+            30%,
+            70% {
+                transform: translateX(8px);
+            }
+        }
+        .login-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 22px;
+            font-size: 2rem;
+            box-shadow: 0 12px 30px rgba(99, 102, 241, 0.4);
+            animation: pulse 2.5s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%,
+            100% {
+                box-shadow: 0 12px 30px rgba(99, 102, 241, 0.4);
+            }
+            50% {
+                box-shadow: 0 18px 45px rgba(99, 102, 241, 0.7);
+            }
+        }
+        .login-card h2 {
+            color: #fff;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+            letter-spacing: -0.5px;
+        }
+        .login-card .login-subtitle {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.78rem;
+            margin-bottom: 26px;
+            font-weight: 500;
+        }
+        .login-input-wrapper {
+            position: relative;
+            margin-bottom: 18px;
+        }
+        .login-input-wrapper input {
+            width: 100%;
+            padding: 14px 18px 14px 46px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            font-size: 1.05rem;
+            background: rgba(255, 255, 255, 0.07);
+            color: #fff;
+            font-family: inherit;
+            letter-spacing: 4px;
+            transition: all 0.3s;
+            outline: none;
+            text-align: center;
+        }
+        .login-input-wrapper input:focus {
+            border-color: #818cf8;
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .login-input-wrapper input::placeholder {
+            color: rgba(255, 255, 255, 0.35);
+            letter-spacing: 1px;
+        }
+        .login-input-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.5);
+            pointer-events: none;
+            transition: color 0.3s;
+        }
+        .login-input-wrapper input:focus~.login-input-icon {
+            color: #818cf8;
+        }
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 16px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: #fff;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.35);
+            font-family: inherit;
+        }
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 32px rgba(99, 102, 241, 0.5);
+            background: linear-gradient(135deg, #818cf8, #9b6dff);
+        }
+        .login-btn:active {
+            transform: scale(0.97);
+        }
+        .login-error {
+            color: #f87171;
+            font-size: 0.75rem;
+            margin-top: 10px;
+            min-height: 20px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .login-attempts {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.7rem;
+            margin-top: 6px;
+        }
+        .login-footer-text {
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 0.65rem;
+            margin-top: 20px;
+            letter-spacing: 1px;
+        }
+
         .sidebar {
             width: var(--sidebar-width);
             background: rgba(255, 255, 255, 0.65);
@@ -733,10 +966,33 @@
             .card-value {
                 font-size: 1.3rem;
             }
+            .login-card {
+                padding: 28px 20px;
+                width: 95%;
+            }
         }
     </style>
 </head>
 <body>
+
+    <!-- ===== TELA DE LOGIN ===== -->
+    <div class="login-overlay" id="loginOverlay">
+        <div class="login-particles" id="loginParticles"></div>
+        <div class="login-card" id="loginCard">
+            <div class="login-icon">🔐</div>
+            <h2>Acesso Restrito</h2>
+            <p class="login-subtitle">Digite a senha para continuar</p>
+            <div class="login-input-wrapper">
+                <span class="login-input-icon">🔑</span>
+                <input type="password" id="loginPassword" placeholder="••••" maxlength="20" autocomplete="off">
+            </div>
+            <button class="login-btn" id="loginBtn">Entrar</button>
+            <div class="login-error" id="loginError"></div>
+            <div class="login-attempts" id="loginAttempts"></div>
+            <div class="login-footer-text">Gestão Financeira Premium</div>
+        </div>
+    </div>
+
     <button class="menu-toggle" id="menuToggle" aria-label="Menu">☰</button>
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
@@ -759,82 +1015,67 @@
             <button class="tab-btn" data-page="comparativo">📆 <span class="nav-text">Comparativo Anual</span></button>
             <button class="tab-btn" data-page="analisemensal">🔍 <span class="nav-text">Análise Mensal</span></button>
             <div class="nav-section-label">⚠️ Monitoramento</div>
-            <button class="tab-btn" data-page="inadimplencia">🚨 <span class="nav-text">Inadimplência</span> <span class="badge"
-                    id="badgePendentes">0</span></button>
+            <button class="tab-btn" data-page="inadimplencia">🚨 <span class="nav-text">Inadimplência</span> <span class="badge" id="badgePendentes">0</span></button>
             <button class="tab-btn" data-page="calendario">📅 <span class="nav-text">Calendário</span></button>
         </nav>
-        <div class="sidebar-footer"><button class="btn" id="printBtnSide">🖨️ Imprimir</button></div>
+        <div class="sidebar-footer">
+            <button class="btn" id="printBtnSide">🖨️ Imprimir</button>
+            <button class="btn" id="logoutBtnSide" style="margin-top:6px; border-color:var(--danger); color:var(--danger);">🚪 Sair</button>
+        </div>
     </aside>
 
     <div class="main-content" id="mainContent">
         <div class="dashboard">
             <div class="header">
                 <div class="header-left">
-                    <div class="clock"><span class="clock-time" id="clockTime">--:--</span><span class="clock-date"
-                            id="clockDate">---</span></div>
+                    <div class="clock"><span class="clock-time" id="clockTime">--:--</span><span class="clock-date" id="clockDate">---</span></div>
                     <h1>📊 Gestão Financeira Premium</h1>
                 </div>
                 <div style="display:flex;gap:8px;flex-wrap:wrap;">
                     <button class="btn" id="refreshDataBtn">⟳ Atualizar</button>
                     <button class="btn" id="darkModeToggle">🌙</button>
-                    <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vSWlUNgP29Erp8Rh5AZPg430wul7T9IwPBPgozPQpO2ig9g8gpJoTn4JNfcKAbBSNH59VngkPE4A7dF/pub"
-                        target="_blank" class="btn" rel="noopener">📊 Planilha</a>
+                    <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vSWlUNgP29Erp8Rh5AZPg430wul7T9IwPBPgozPQpO2ig9g8gpJoTn4JNfcKAbBSNH59VngkPE4A7dF/pub" target="_blank" class="btn" rel="noopener">📊 Planilha</a>
                     <button class="btn" id="printBtn">🖨️</button>
+                    <button class="btn" id="logoutBtnTop" style="border-color:var(--danger);color:var(--danger);">🚪 Sair</button>
                 </div>
             </div>
             <div id="loadingOverlay" class="loading-overlay">
-                <div class="spinner">
-                    <div class="spinner-icon"></div>Carregando dados...
-                </div>
+                <div class="spinner"><div class="spinner-icon"></div>Carregando dados...</div>
             </div>
             <div class="toast-container" id="toastContainer"></div>
 
             <!-- Resumo Geral -->
             <div id="resumo" class="page active">
                 <div class="cards-row">
-                    <div class="card card-entrada"><div class="card-title">💰 Entradas</div><div class="card-value entrada"
-                            id="totalCreditos">R$ 0,00</div></div>
-                    <div class="card card-saida"><div class="card-title">📤 Saídas</div><div class="card-value saida"
-                            id="totalDebitos">R$ 0,00</div></div>
-                    <div class="card card-saldo"><div class="card-title">⚖️ Saldo</div><div class="card-value saldo"
-                            id="saldoLiquido">R$ 0,00</div></div>
-                    <div class="card"><div class="card-title">📋 Transações</div><div class="card-value" id="totalTransacoes"
-                            style="color:var(--purple);">0</div></div>
+                    <div class="card card-entrada"><div class="card-title">💰 Entradas</div><div class="card-value entrada" id="totalCreditos">R$ 0,00</div></div>
+                    <div class="card card-saida"><div class="card-title">📤 Saídas</div><div class="card-value saida" id="totalDebitos">R$ 0,00</div></div>
+                    <div class="card card-saldo"><div class="card-title">⚖️ Saldo</div><div class="card-value saldo" id="saldoLiquido">R$ 0,00</div></div>
+                    <div class="card"><div class="card-title">📋 Transações</div><div class="card-value" id="totalTransacoes" style="color:var(--purple);">0</div></div>
                 </div>
                 <div class="filter-bar" id="filtroResumo"></div>
                 <div class="table-container">
                     <table id="tabelaTransacoes">
-                        <thead><tr><th data-sort="data">Data</th><th data-sort="descricao">Descrição</th><th
-                                data-sort="categoria">Categoria</th><th data-sort="valor">Valor</th><th
-                                    data-sort="status">Status</th><th data-sort="formaPagamento">Forma</th><th
-                                    data-sort="banco">Banco</th><th data-sort="pessoa">Pessoa</th></tr></thead>
+                        <thead><tr><th data-sort="data">Data</th><th data-sort="descricao">Descrição</th><th data-sort="categoria">Categoria</th><th data-sort="valor">Valor</th><th data-sort="status">Status</th><th data-sort="formaPagamento">Forma</th><th data-sort="banco">Banco</th><th data-sort="pessoa">Pessoa</th></tr></thead>
                         <tbody></tbody>
                     </table>
                 </div>
                 <div class="charts-row">
                     <div class="chart-box"><h3>📈 Evolução Mensal</h3><canvas id="graficoFluxo"></canvas></div>
-                    <div class="chart-box"><h3>🥧 Gastos por Categoria</h3><canvas id="graficoCategoriasResumo"></canvas>
-                    </div>
+                    <div class="chart-box"><h3>🥧 Gastos por Categoria</h3><canvas id="graficoCategoriasResumo"></canvas></div>
                 </div>
             </div>
 
             <!-- Débitos -->
             <div id="debitos" class="page">
                 <div class="cards-row">
-                    <div class="card card-saida"><div class="card-title">💰 Total Débitos</div><div class="card-value saida"
-                            id="debTotal">R$ 0,00</div></div>
-                    <div class="card"><div class="card-title">📊 Média</div><div class="card-value" id="debMedia"
-                            style="color:var(--danger);">R$ 0,00</div></div>
-                    <div class="card"><div class="card-title">🔢 Quantidade</div><div class="card-value" id="debQtd"
-                            style="color:var(--danger);">0</div></div>
+                    <div class="card card-saida"><div class="card-title">💰 Total Débitos</div><div class="card-value saida" id="debTotal">R$ 0,00</div></div>
+                    <div class="card"><div class="card-title">📊 Média</div><div class="card-value" id="debMedia" style="color:var(--danger);">R$ 0,00</div></div>
+                    <div class="card"><div class="card-title">🔢 Quantidade</div><div class="card-value" id="debQtd" style="color:var(--danger);">0</div></div>
                 </div>
                 <div class="filter-bar" id="filtroDebitos"></div>
                 <div class="table-container">
                     <table id="tabelaDebitos">
-                        <thead><tr><th data-sort="data">Data</th><th data-sort="valor">Valor</th><th
-                                data-sort="status">Status</th><th data-sort="formaPagamento">Forma</th><th
-                                    data-sort="descricao">Descrição</th><th data-sort="banco">Banco</th><th
-                                    data-sort="categoria">Categoria</th><th data-sort="pessoa">Pessoa</th></tr></thead>
+                        <thead><tr><th data-sort="data">Data</th><th data-sort="valor">Valor</th><th data-sort="status">Status</th><th data-sort="formaPagamento">Forma</th><th data-sort="descricao">Descrição</th><th data-sort="banco">Banco</th><th data-sort="categoria">Categoria</th><th data-sort="pessoa">Pessoa</th></tr></thead>
                         <tbody></tbody>
                     </table>
                 </div>
@@ -842,8 +1083,7 @@
                     <div class="chart-box"><h3>📊 Por Categoria</h3><canvas id="graficoDebCategoria"></canvas></div>
                     <div class="chart-box"><h3>📅 Mensal</h3><canvas id="graficoDebMensal"></canvas></div>
                 </div>
-                <div
-                    style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:var(--card-bg);border-radius:20px;padding:14px 18px;border:1px solid var(--border);box-shadow:var(--shadow);margin-top:20px;">
+                <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:var(--card-bg);border-radius:20px;padding:14px 18px;border:1px solid var(--border);box-shadow:var(--shadow);margin-top:20px;">
                     <div class="filter-group"><label>Mês</label><select id="debCalMes"></select></div>
                     <div class="filter-group"><label>Ano</label><select id="debCalAno"></select></div>
                     <button class="btn" id="debCalHojeBtn" style="background:var(--accent);color:#fff;">📍 Hoje</button>
@@ -856,20 +1096,14 @@
             <!-- Créditos -->
             <div id="creditos" class="page">
                 <div class="cards-row">
-                    <div class="card card-entrada"><div class="card-title">💰 Total Créditos</div><div
-                            class="card-value entrada" id="credTotal">R$ 0,00</div></div>
-                    <div class="card"><div class="card-title">📊 Média</div><div class="card-value" id="credMedia"
-                            style="color:var(--success);">R$ 0,00</div></div>
-                    <div class="card"><div class="card-title">🔢 Quantidade</div><div class="card-value" id="credQtd"
-                            style="color:var(--success);">0</div></div>
+                    <div class="card card-entrada"><div class="card-title">💰 Total Créditos</div><div class="card-value entrada" id="credTotal">R$ 0,00</div></div>
+                    <div class="card"><div class="card-title">📊 Média</div><div class="card-value" id="credMedia" style="color:var(--success);">R$ 0,00</div></div>
+                    <div class="card"><div class="card-title">🔢 Quantidade</div><div class="card-value" id="credQtd" style="color:var(--success);">0</div></div>
                 </div>
                 <div class="filter-bar" id="filtroCreditos"></div>
                 <div class="table-container">
                     <table id="tabelaCreditos">
-                        <thead><tr><th data-sort="data">Data</th><th data-sort="valor">Valor</th><th
-                                data-sort="status">Status</th><th data-sort="formaPagamento">Forma</th><th
-                                    data-sort="descricao">Descrição</th><th data-sort="banco">Banco</th><th
-                                    data-sort="categoria">Categoria</th><th data-sort="pessoa">Pessoa</th></tr></thead>
+                        <thead><tr><th data-sort="data">Data</th><th data-sort="valor">Valor</th><th data-sort="status">Status</th><th data-sort="formaPagamento">Forma</th><th data-sort="descricao">Descrição</th><th data-sort="banco">Banco</th><th data-sort="categoria">Categoria</th><th data-sort="pessoa">Pessoa</th></tr></thead>
                         <tbody></tbody>
                     </table>
                 </div>
@@ -877,8 +1111,7 @@
                     <div class="chart-box"><h3>📊 Por Categoria</h3><canvas id="graficoCredCategoria"></canvas></div>
                     <div class="chart-box"><h3>📅 Mensal</h3><canvas id="graficoCredMensal"></canvas></div>
                 </div>
-                <div
-                    style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:var(--card-bg);border-radius:20px;padding:14px 18px;border:1px solid var(--border);box-shadow:var(--shadow);margin-top:20px;">
+                <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:var(--card-bg);border-radius:20px;padding:14px 18px;border:1px solid var(--border);box-shadow:var(--shadow);margin-top:20px;">
                     <div class="filter-group"><label>Mês</label><select id="credCalMes"></select></div>
                     <div class="filter-group"><label>Ano</label><select id="credCalAno"></select></div>
                     <button class="btn" id="credCalHojeBtn" style="background:var(--accent);color:#fff;">📍 Hoje</button>
@@ -891,14 +1124,10 @@
             <!-- D.R.E. -->
             <div id="dre" class="page">
                 <div class="cards-row">
-                    <div class="card card-entrada"><div class="card-title">💰 Receita Bruta</div><div class="card-value entrada"
-                            id="dreReceita">R$ 0,00</div></div>
-                    <div class="card card-saida"><div class="card-title">📤 Despesas</div><div class="card-value saida"
-                            id="dreDespesa">R$ 0,00</div></div>
-                    <div class="card card-saldo"><div class="card-title">⚖️ Resultado</div><div class="card-value saldo"
-                            id="dreResultado">R$ 0,00</div></div>
-                    <div class="card"><div class="card-title">📊 Margem</div><div class="card-value" id="dreMargem">0,0%
-                    </div></div>
+                    <div class="card card-entrada"><div class="card-title">💰 Receita Bruta</div><div class="card-value entrada" id="dreReceita">R$ 0,00</div></div>
+                    <div class="card card-saida"><div class="card-title">📤 Despesas</div><div class="card-value saida" id="dreDespesa">R$ 0,00</div></div>
+                    <div class="card card-saldo"><div class="card-title">⚖️ Resultado</div><div class="card-value saldo" id="dreResultado">R$ 0,00</div></div>
+                    <div class="card"><div class="card-title">📊 Margem</div><div class="card-value" id="dreMargem">0,0%</div></div>
                 </div>
                 <div class="filter-bar" id="filtroDre"></div>
                 <div class="table-container">
@@ -916,14 +1145,10 @@
             <!-- Tendências -->
             <div id="tendencias" class="page">
                 <div class="cards-row">
-                    <div class="card card-entrada"><div class="card-title">📈 Cresc. Receitas</div><div
-                            class="card-value entrada" id="tendCrescReceita">0%</div></div>
-                    <div class="card card-saida"><div class="card-title">📉 Cresc. Despesas</div><div class="card-value saida"
-                            id="tendCrescDespesa">0%</div></div>
-                    <div class="card"><div class="card-title">🔮 Proj. Receita</div><div class="card-value"
-                            id="tendProjReceita">R$ 0,00</div></div>
-                    <div class="card"><div class="card-title">⚖️ Proj. Resultado</div><div class="card-value"
-                            id="tendProjResultado">R$ 0,00</div></div>
+                    <div class="card card-entrada"><div class="card-title">📈 Cresc. Receitas</div><div class="card-value entrada" id="tendCrescReceita">0%</div></div>
+                    <div class="card card-saida"><div class="card-title">📉 Cresc. Despesas</div><div class="card-value saida" id="tendCrescDespesa">0%</div></div>
+                    <div class="card"><div class="card-title">🔮 Proj. Receita</div><div class="card-value" id="tendProjReceita">R$ 0,00</div></div>
+                    <div class="card"><div class="card-title">⚖️ Proj. Resultado</div><div class="card-value" id="tendProjResultado">R$ 0,00</div></div>
                 </div>
                 <div class="filter-bar" id="filtroTendencias"></div>
                 <div class="charts-row">
@@ -935,12 +1160,9 @@
             <!-- Bancos -->
             <div id="bancos" class="page">
                 <div class="cards-row">
-                    <div class="card card-entrada"><div class="card-title">🏦 Entradas</div><div class="card-value entrada"
-                            id="banTotalCred">R$ 0,00</div></div>
-                    <div class="card card-saida"><div class="card-title">🏦 Saídas</div><div class="card-value saida"
-                            id="banTotalDeb">R$ 0,00</div></div>
-                    <div class="card card-saldo"><div class="card-title">⚖️ Saldo</div><div class="card-value saldo"
-                            id="banSaldo">R$ 0,00</div></div>
+                    <div class="card card-entrada"><div class="card-title">🏦 Entradas</div><div class="card-value entrada" id="banTotalCred">R$ 0,00</div></div>
+                    <div class="card card-saida"><div class="card-title">🏦 Saídas</div><div class="card-value saida" id="banTotalDeb">R$ 0,00</div></div>
+                    <div class="card card-saldo"><div class="card-title">⚖️ Saldo</div><div class="card-value saldo" id="banSaldo">R$ 0,00</div></div>
                 </div>
                 <div class="filter-bar" id="filtroBancos"></div>
                 <div class="charts-row">
@@ -952,10 +1174,8 @@
             <!-- Pessoas -->
             <div id="pessoas" class="page">
                 <div class="cards-row">
-                    <div class="card card-entrada"><div class="card-title">👤 Maior Recebedor</div><div class="card-value"
-                            id="pesMaiorCredor" style="font-size:1rem;">-</div></div>
-                    <div class="card card-saida"><div class="card-title">👤 Maior Fornecedor</div><div class="card-value"
-                            id="pesMaiorDevedor" style="font-size:1rem;">-</div></div>
+                    <div class="card card-entrada"><div class="card-title">👤 Maior Recebedor</div><div class="card-value" id="pesMaiorCredor" style="font-size:1rem;">-</div></div>
+                    <div class="card card-saida"><div class="card-title">👤 Maior Fornecedor</div><div class="card-value" id="pesMaiorDevedor" style="font-size:1rem;">-</div></div>
                 </div>
                 <div class="filter-bar" id="filtroPessoas"></div>
                 <div class="charts-row">
@@ -967,10 +1187,8 @@
             <!-- Formas de Pagamento -->
             <div id="formaspagamento" class="page">
                 <div class="cards-row">
-                    <div class="card card-entrada"><div class="card-title">💳 +Usada (Entrada)</div><div
-                            class="card-value entrada" id="fpMaisUsadaCred" style="font-size:1rem;">-</div></div>
-                    <div class="card card-saida"><div class="card-title">💳 +Usada (Saída)</div><div class="card-value saida"
-                            id="fpMaisUsadaDeb" style="font-size:1rem;">-</div></div>
+                    <div class="card card-entrada"><div class="card-title">💳 +Usada (Entrada)</div><div class="card-value entrada" id="fpMaisUsadaCred" style="font-size:1rem;">-</div></div>
+                    <div class="card card-saida"><div class="card-title">💳 +Usada (Saída)</div><div class="card-value saida" id="fpMaisUsadaDeb" style="font-size:1rem;">-</div></div>
                 </div>
                 <div class="filter-bar" id="filtroFormasPag"></div>
                 <div class="charts-row">
@@ -982,24 +1200,16 @@
             <!-- Inadimplência -->
             <div id="inadimplencia" class="page">
                 <div class="cards-row">
-                    <div class="card card-entrada"><div class="card-title">🟢 Créditos Pendentes</div><div
-                            class="card-value entrada" id="inadPendCred">R$ 0,00</div></div>
-                    <div class="card card-saida"><div class="card-title">🔴 Débitos Pendentes</div><div class="card-value saida"
-                            id="inadPendDeb">R$ 0,00</div></div>
-                    <div class="card card-saldo"><div class="card-title">💸 Total Vencido</div><div class="card-value saldo"
-                            id="inadTotalVencido">R$ 0,00</div></div>
-                    <div class="card"><div class="card-title">📋 Qtd. Pendências</div><div class="card-value"
-                            id="inadQtdPendente">0</div></div>
-                    <div class="card"><div class="card-title">📅 Dias Médios Atraso</div><div class="card-value"
-                            id="inadDiasMedio">0</div></div>
+                    <div class="card card-entrada"><div class="card-title">🟢 Créditos Pendentes</div><div class="card-value entrada" id="inadPendCred">R$ 0,00</div></div>
+                    <div class="card card-saida"><div class="card-title">🔴 Débitos Pendentes</div><div class="card-value saida" id="inadPendDeb">R$ 0,00</div></div>
+                    <div class="card card-saldo"><div class="card-title">💸 Total Vencido</div><div class="card-value saldo" id="inadTotalVencido">R$ 0,00</div></div>
+                    <div class="card"><div class="card-title">📋 Qtd. Pendências</div><div class="card-value" id="inadQtdPendente">0</div></div>
+                    <div class="card"><div class="card-title">📅 Dias Médios Atraso</div><div class="card-value" id="inadDiasMedio">0</div></div>
                 </div>
                 <div class="filter-bar" id="filtroInadimplencia"></div>
                 <div class="table-container" style="max-height:500px;">
                     <table id="inadTabela">
-                        <thead><tr><th data-sort="data">Data</th><th data-sort="descricao">Descrição</th><th
-                                data-sort="valor">Valor</th><th data-sort="categoria">Categoria</th><th
-                                    data-sort="pessoa">Pessoa</th><th data-sort="banco">Banco</th><th
-                                    data-sort="diasAtraso">Dias Atraso</th><th data-sort="tipo">Tipo</th></tr></thead>
+                        <thead><tr><th data-sort="data">Data</th><th data-sort="descricao">Descrição</th><th data-sort="valor">Valor</th><th data-sort="categoria">Categoria</th><th data-sort="pessoa">Pessoa</th><th data-sort="banco">Banco</th><th data-sort="diasAtraso">Dias Atraso</th><th data-sort="tipo">Tipo</th></tr></thead>
                         <tbody></tbody>
                     </table>
                 </div>
@@ -1008,15 +1218,11 @@
             <!-- Calendário Geral -->
             <div id="calendario" class="page">
                 <div class="cards-row">
-                    <div class="card card-entrada"><div class="card-title">💰 Entradas do Mês</div><div
-                            class="card-value entrada" id="calEntradasMes">R$ 0,00</div></div>
-                    <div class="card card-saida"><div class="card-title">📤 Saídas do Mês</div><div class="card-value saida"
-                            id="calSaidasMes">R$ 0,00</div></div>
-                    <div class="card card-saldo"><div class="card-title">⚖️ Saldo do Mês</div><div class="card-value saldo"
-                            id="calSaldoMes">R$ 0,00</div></div>
+                    <div class="card card-entrada"><div class="card-title">💰 Entradas do Mês</div><div class="card-value entrada" id="calEntradasMes">R$ 0,00</div></div>
+                    <div class="card card-saida"><div class="card-title">📤 Saídas do Mês</div><div class="card-value saida" id="calSaidasMes">R$ 0,00</div></div>
+                    <div class="card card-saldo"><div class="card-title">⚖️ Saldo do Mês</div><div class="card-value saldo" id="calSaldoMes">R$ 0,00</div></div>
                 </div>
-                <div
-                    style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:var(--card-bg);border-radius:20px;padding:14px 18px;border:1px solid var(--border);box-shadow:var(--shadow);">
+                <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:var(--card-bg);border-radius:20px;padding:14px 18px;border:1px solid var(--border);box-shadow:var(--shadow);">
                     <div class="filter-group"><label>Mês</label><select id="calMes"></select></div>
                     <div class="filter-group"><label>Ano</label><select id="calAno"></select></div>
                     <button class="btn" id="calHojeBtn" style="background:var(--accent);color:#fff;">📍 Hoje</button>
@@ -1024,61 +1230,41 @@
                     <button class="btn" id="calProximoBtn">▶</button>
                 </div>
                 <div class="calendar-grid" id="calendarGrid"></div>
-                <!-- Info do dia selecionado -->
                 <div class="info-selected" id="calInfoSelected" style="display:none;">
                     <span id="calInfoLabel">Selecione um dia</span>
                     <button id="calClearSelection">✕ Limpar</button>
                 </div>
-                <!-- Tabela de transações do dia -->
                 <div class="table-container" id="calTabelaContainer" style="display:none; max-height:350px;">
                     <table id="tabelaCalendarioTransacoes">
-                        <thead><tr><th data-sort="data">Data</th><th data-sort="descricao">Descrição</th><th
-                                data-sort="categoria">Categoria</th><th data-sort="valor">Valor</th><th
-                                    data-sort="status">Status</th><th data-sort="formaPagamento">Forma</th><th
-                                    data-sort="banco">Banco</th><th data-sort="pessoa">Pessoa</th><th data-sort="tipo">Tipo</th></tr></thead>
+                        <thead><tr><th data-sort="data">Data</th><th data-sort="descricao">Descrição</th><th data-sort="categoria">Categoria</th><th data-sort="valor">Valor</th><th data-sort="status">Status</th><th data-sort="formaPagamento">Forma</th><th data-sort="banco">Banco</th><th data-sort="pessoa">Pessoa</th><th data-sort="tipo">Tipo</th></tr></thead>
                         <tbody></tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- COMPARATIVO ANUAL REFEITO (Tabela) -->
+            <!-- COMPARATIVO ANUAL -->
             <div id="comparativo" class="page">
                 <div class="cards-row">
-                    <div class="card card-entrada"><div class="card-title">📅 Receita (Ano)</div><div class="card-value entrada"
-                            id="compRecSel">R$ 0,00</div></div>
-                    <div class="card card-saida"><div class="card-title">📅 Despesa (Ano)</div><div class="card-value saida"
-                            id="compDesSel">R$ 0,00</div></div>
-                    <div class="card card-saldo"><div class="card-title">⚖️ Resultado</div><div class="card-value saldo"
-                            id="compResSel">R$ 0,00</div></div>
+                    <div class="card card-entrada"><div class="card-title">📅 Receita (Ano)</div><div class="card-value entrada" id="compRecSel">R$ 0,00</div></div>
+                    <div class="card card-saida"><div class="card-title">📅 Despesa (Ano)</div><div class="card-value saida" id="compDesSel">R$ 0,00</div></div>
+                    <div class="card card-saldo"><div class="card-title">⚖️ Resultado</div><div class="card-value saldo" id="compResSel">R$ 0,00</div></div>
                 </div>
                 <div class="filter-bar" id="filtroComparativo"></div>
                 <div class="table-container" style="max-height:600px;">
                     <table id="tabelaComparativo">
-                        <thead>
-                            <tr>
-                                <th>Ano</th>
-                                <th>Receitas (R$)</th>
-                                <th>Despesas (R$)</th>
-                                <th>Resultado (R$)</th>
-                                <th>Margem (%)</th>
-                            </tr>
-                        </thead>
+                        <thead><tr><th>Ano</th><th>Receitas (R$)</th><th>Despesas (R$)</th><th>Resultado (R$)</th><th>Margem (%)</th></tr></thead>
                         <tbody></tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- ANÁLISE MENSAL (NOVA PÁGINA) -->
+            <!-- ANÁLISE MENSAL -->
             <div id="analisemensal" class="page">
                 <div class="cards-row">
-                    <div class="card card-entrada"><div class="card-title">🏆 Melhor Mês</div><div class="card-value entrada"
-                            id="amMelhorMes" style="font-size:1.1rem;">-</div></div>
-                    <div class="card card-saida"><div class="card-title">⚠️ Pior Mês</div><div class="card-value saida"
-                            id="amPiorMes" style="font-size:1.1rem;">-</div></div>
-                    <div class="card card-saldo"><div class="card-title">📊 Média Mensal</div><div class="card-value saldo"
-                            id="amMediaMensal">R$ 0,00</div></div>
-                    <div class="card"><div class="card-title">📈 Meses Positivos</div><div class="card-value" id="amMesesPositivos"
-                            style="color:var(--success);">0</div></div>
+                    <div class="card card-entrada"><div class="card-title">🏆 Melhor Mês</div><div class="card-value entrada" id="amMelhorMes" style="font-size:1.1rem;">-</div></div>
+                    <div class="card card-saida"><div class="card-title">⚠️ Pior Mês</div><div class="card-value saida" id="amPiorMes" style="font-size:1.1rem;">-</div></div>
+                    <div class="card card-saldo"><div class="card-title">📊 Média Mensal</div><div class="card-value saldo" id="amMediaMensal">R$ 0,00</div></div>
+                    <div class="card"><div class="card-title">📈 Meses Positivos</div><div class="card-value" id="amMesesPositivos" style="color:var(--success);">0</div></div>
                 </div>
                 <div class="filter-bar" id="filtroAnaliseMensal">
                     <div class="filter-group"><label>Ano</label><select id="amAno"><option value="">Todos</option></select></div>
@@ -1086,16 +1272,7 @@
                 </div>
                 <div class="table-container" style="max-height:500px;">
                     <table id="tabelaAnaliseMensal">
-                        <thead>
-                            <tr>
-                                <th>Mês</th>
-                                <th>Receitas (R$)</th>
-                                <th>Despesas (R$)</th>
-                                <th>Saldo (R$)</th>
-                                <th>Margem (%)</th>
-                                <th>Acumulado (R$)</th>
-                            </tr>
-                        </thead>
+                        <thead><tr><th>Mês</th><th>Receitas (R$)</th><th>Despesas (R$)</th><th>Saldo (R$)</th><th>Margem (%)</th><th>Acumulado (R$)</th></tr></thead>
                         <tbody></tbody>
                     </table>
                 </div>
@@ -1109,6 +1286,108 @@
 
     <script>
         (function() {
+            // ========== SISTEMA DE LOGIN (SENHA OFUSCADA) ==========
+            (function setupLogin() {
+                const overlay = document.getElementById('loginOverlay');
+                const card = document.getElementById('loginCard');
+                const input = document.getElementById('loginPassword');
+                const btn = document.getElementById('loginBtn');
+                const errorEl = document.getElementById('loginError');
+                const attemptsEl = document.getElementById('loginAttempts');
+
+                // Senha correta (2208) ofuscada - reconstruída em tempo de execução
+                function _obterChave() {
+                    // A string "8-0-2-2" é dividida, invertida e reunida para formar "2208"
+                    return '8-0-2-2'.split('-').reverse().join('');
+                }
+
+                const MAX_TENTATIVAS = 5;
+                const BLOQUEIO_MS = 30000; // 30 segundos
+                let tentativas = 0;
+                let bloqueadoAte = null;
+
+                // Verifica se já está autenticado na sessão
+                if (sessionStorage.getItem('_auth_gfp') === 's') {
+                    overlay.classList.add('hidden');
+                    return;
+                }
+
+                // Partículas animadas no fundo
+                const particlesContainer = document.getElementById('loginParticles');
+                for (let i = 0; i < 40; i++) {
+                    const p = document.createElement('div');
+                    p.classList.add('login-particle');
+                    const size = Math.random() * 6 + 2;
+                    p.style.width = size + 'px';
+                    p.style.height = size + 'px';
+                    p.style.left = Math.random() * 100 + '%';
+                    p.style.animationDuration = Math.random() * 10 + 8 + 's';
+                    p.style.animationDelay = Math.random() * 10 + 's';
+                    p.style.opacity = Math.random() * 0.5 + 0.1;
+                    particlesContainer.appendChild(p);
+                }
+
+                function verificar() {
+                    const agora = Date.now();
+                    if (bloqueadoAte && agora < bloqueadoAte) {
+                        const restante = Math.ceil((bloqueadoAte - agora) / 1000);
+                        errorEl.textContent = '⏳ Muitas tentativas. Aguarde ' + restante + 's.';
+                        return;
+                    }
+                    if (bloqueadoAte && agora >= bloqueadoAte) {
+                        bloqueadoAte = null;
+                        tentativas = 0;
+                        attemptsEl.textContent = '';
+                    }
+
+                    const digitado = input.value.trim();
+                    if (digitado === _obterChave()) {
+                        // Sucesso
+                        errorEl.textContent = '';
+                        errorEl.style.color = '#34d399';
+                        errorEl.textContent = '✅ Acesso liberado!';
+                        sessionStorage.setItem('_auth_gfp', 's');
+                        setTimeout(() => {
+                            overlay.classList.add('hidden');
+                        }, 500);
+                    } else {
+                        tentativas++;
+                        const restam = MAX_TENTATIVAS - tentativas;
+                        card.classList.add('shake');
+                        setTimeout(() => card.classList.remove('shake'), 500);
+                        input.value = '';
+                        input.focus();
+                        if (tentativas >= MAX_TENTATIVAS) {
+                            bloqueadoAte = Date.now() + BLOQUEIO_MS;
+                            errorEl.textContent = '🚫 Bloqueado por 30 segundos.';
+                            attemptsEl.textContent = '';
+                        } else {
+                            errorEl.textContent = '❌ Senha incorreta!';
+                            attemptsEl.textContent = 'Tentativas restantes: ' + restam;
+                        }
+                    }
+                }
+
+                btn.addEventListener('click', verificar);
+                input.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') verificar();
+                });
+
+                // Foco automático
+                setTimeout(() => input.focus(), 600);
+            })();
+
+            // Função de logout
+            function fazerLogout() {
+                sessionStorage.removeItem('_auth_gfp');
+                location.reload();
+            }
+
+            // Botões de logout
+            document.getElementById('logoutBtnSide').addEventListener('click', fazerLogout);
+            document.getElementById('logoutBtnTop').addEventListener('click', fazerLogout);
+
+            // ========== SISTEMA PRINCIPAL (mantido igual) ==========
             const $ = id => document.getElementById(id);
             const PUB_DOC =
                 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSWlUNgP29Erp8Rh5AZPg430wul7T9IwPBPgozPQpO2ig9g8gpJoTn4JNfcKAbBSNH59VngkPE4A7dF/pub';
@@ -1129,7 +1408,6 @@
             ];
             const mesesAbrev = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
 
-            // Estado para dia selecionado no calendário
             let selectedDay = { ano: null, mes: null, dia: null };
 
             const fm = v => v == null || isNaN(v) ? '0,00' : Number(v).toLocaleString('pt-BR', { minimumFractionDigits: 2,
@@ -1288,7 +1566,6 @@
 
             async function fetchData(gid, tipo) {
                 const url = `${PUB_DOC}?gid=${gid}&single=true&output=csv`;
-                console.log(`🔗 ${tipo}: ${url}`);
                 const resp = await fetch(url);
                 if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
                 const txt = await resp.text();
@@ -1472,7 +1749,6 @@
                     }
                 }
 
-                // Preenche filtro de ano da Análise Mensal
                 const amAno = $('amAno');
                 if (amAno) {
                     const anosUnicos = [...new Set(all.map(t => t.ano))].sort((a, b) => b - a);
@@ -1744,7 +2020,6 @@
                 });
             }
 
-            /* ===== FUNÇÕES DO CALENDÁRIO GERAL COM SELEÇÃO DE DIA ===== */
             function updateCalendario() {
                 const mes = +($('calMes')?.value || new Date().getMonth() + 1);
                 const ano = +($('calAno')?.value || new Date().getFullYear());
@@ -1776,19 +2051,17 @@
                 }
                 grid.innerHTML = h;
 
-                // Adiciona eventos de clique nos dias
                 grid.querySelectorAll('.calendar-cell[data-dia]').forEach(cell => {
                     cell.addEventListener('click', () => {
                         const dia = +cell.dataset.dia;
                         const mes = +cell.dataset.mes;
                         const ano = +cell.dataset.ano;
                         selectedDay = { ano, mes, dia };
-                        updateCalendario(); // recria para destacar visualmente
+                        updateCalendario();
                         mostrarTransacoesDoDia(ano, mes, dia);
                     });
                 });
 
-                // Se já havia um dia selecionado, mantém a tabela visível
                 if (selectedDay.ano && selectedDay.mes && selectedDay.dia) {
                     mostrarTransacoesDoDia(selectedDay.ano, selectedDay.mes, selectedDay.dia);
                 } else {
@@ -1842,7 +2115,6 @@
                 selectedDay = { ano: null, mes: null, dia: null };
             }
 
-            /* ===== COMPARATIVO ANUAL COM TABELA ===== */
             function updateComparativoAnual() {
                 const ar = $('compAno')?.value || '';
                 const anos = [...new Set([...creditos.map(t => t.ano), ...debitos.map(t => t.ano)])].sort((a, b) => a - b);
@@ -1880,7 +2152,6 @@
                 tbody.appendChild(frag);
             }
 
-            /* ===== ANÁLISE MENSAL ===== */
             function updateAnaliseMensal() {
                 const anoFiltro = $('amAno')?.value || '';
                 const todos = [...creditos, ...debitos];
@@ -2013,7 +2284,6 @@
                 }
             }
 
-            /* ===== EVENTOS E INICIALIZAÇÃO ===== */
             function bindEvents(pref, fn) {
                 ['Categoria', 'Pessoa', 'Status', 'FormaPagamento', 'Banco', 'Ano', 'Mes', 'Dia', 'Tipo'].forEach(s => {
                     const el = $(pref + s);
@@ -2128,7 +2398,6 @@
                 };
             }
 
-            /* ===== RELÓGIO ===== */
             function atualizarRelogio() {
                 const agora = new Date();
                 const hora = agora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
