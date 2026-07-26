@@ -1,1007 +1,1085 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Agenda da Clínica Odontológica</title>
-    <style>
-        /* ── Reset & base ── */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f0f5f9;
-            padding: 30px 20px;
-            color: #1e2b3a;
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        /* ── Cabeçalho ── */
-        header {
-            background: linear-gradient(135deg, #0a2b4e, #1a4b7a);
-            color: #fff;
-            padding: 30px 35px;
-            border-radius: 18px;
-            margin-bottom: 35px;
-            box-shadow: 0 8px 25px rgba(10, 43, 78, 0.30);
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        header h1 {
-            font-size: 28px;
-            font-weight: 600;
-            letter-spacing: -0.3px;
-        }
-
-        header h1 span {
-            font-weight: 300;
-            opacity: 0.8;
-        }
-
-        .header-info {
-            font-size: 15px;
-            opacity: 0.85;
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-
-        .header-info .badge {
-            background: rgba(255, 255, 255, 0.18);
-            padding: 6px 18px;
-            border-radius: 40px;
-            font-size: 13px;
-            backdrop-filter: blur(2px);
-        }
-
-        .header-info .badge i {
-            font-style: normal;
-            margin-right: 6px;
-        }
-
-        /* ── Barra de ferramentas ── */
-        .toolbar {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin-bottom: 28px;
-            align-items: center;
-            background: #fff;
-            padding: 16px 24px;
-            border-radius: 14px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
-            border: 1px solid #e2eaf1;
-        }
-
-        .toolbar .search-box {
-            flex: 1 1 260px;
-            display: flex;
-            align-items: center;
-            background: #f4f8fc;
-            border-radius: 40px;
-            padding: 0 18px;
-            border: 1px solid #dce6ef;
-            transition: 0.2s;
-        }
-
-        .toolbar .search-box:focus-within {
-            border-color: #1a4b7a;
-            background: #fff;
-            box-shadow: 0 0 0 3px rgba(26, 75, 122, 0.10);
-        }
-
-        .toolbar .search-box input {
-            border: none;
-            background: transparent;
-            padding: 12px 10px;
-            font-size: 15px;
-            width: 100%;
-            outline: none;
-            color: #1e2b3a;
-        }
-
-        .toolbar .search-box .icon {
-            color: #7a8d9e;
-            font-size: 18px;
-        }
-
-        .toolbar .filter-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .toolbar .filter-group select,
-        .toolbar .filter-group input[type="date"] {
-            padding: 10px 16px;
-            border-radius: 40px;
-            border: 1px solid #dce6ef;
-            background: #f4f8fc;
-            font-size: 14px;
-            color: #1e2b3a;
-            outline: none;
-            cursor: pointer;
-            transition: 0.2s;
-            min-width: 130px;
-        }
-
-        .toolbar .filter-group select:focus,
-        .toolbar .filter-group input[type="date"]:focus {
-            border-color: #1a4b7a;
-            background: #fff;
-            box-shadow: 0 0 0 3px rgba(26, 75, 122, 0.10);
-        }
-
-        .btn-reset {
-            background: #eaf0f6;
-            border: none;
-            padding: 10px 22px;
-            border-radius: 40px;
-            font-size: 14px;
-            font-weight: 500;
-            color: #1e2b3a;
-            cursor: pointer;
-            transition: 0.2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            border: 1px solid transparent;
-        }
-
-        .btn-reset:hover {
-            background: #dce6ef;
-            border-color: #c0cedc;
-        }
-
-        .btn-reset:active {
-            transform: scale(0.96);
-        }
-
-        /* ── Contador / status ── */
-        .status-bar {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 18px;
-            padding: 0 6px;
-        }
-
-        .status-bar .count {
-            font-size: 15px;
-            color: #3e566b;
-            background: #fff;
-            padding: 6px 20px;
-            border-radius: 40px;
-            box-shadow: 0 1px 6px rgba(0, 0, 0, 0.04);
-            border: 1px solid #e2eaf1;
-        }
-
-        .status-bar .count strong {
-            color: #0a2b4e;
-        }
-
-        .status-bar .update-time {
-            font-size: 14px;
-            color: #6a7f92;
-        }
-
-        /* ── Tabela ── */
-        .table-wrapper {
-            background: #fff;
-            border-radius: 18px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-            border: 1px solid #e2eaf1;
-            overflow: hidden;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 14.5px;
-            min-width: 700px;
-        }
-
-        thead {
-            background: #f7fafd;
-            border-bottom: 2px solid #dce6ef;
-        }
-
-        thead th {
-            padding: 16px 18px;
-            text-align: left;
-            font-weight: 600;
-            color: #1a3a5a;
-            white-space: nowrap;
-            font-size: 13px;
-            letter-spacing: 0.3px;
-            text-transform: uppercase;
-            position: sticky;
-            top: 0;
-            background: #f7fafd;
-            z-index: 2;
-        }
-
-        thead th:not(:last-child)::after {
-            content: '';
-            position: absolute;
-            right: 0;
-            top: 20%;
-            height: 60%;
-            width: 1px;
-            background: #dce6ef;
-        }
-
-        thead th {
-            position: relative;
-        }
-
-        tbody tr {
-            border-bottom: 1px solid #eef4f9;
-            transition: background 0.15s;
-        }
-
-        tbody tr:hover {
-            background: #f6faff;
-        }
-
-        tbody tr:last-child {
-            border-bottom: none;
-        }
-
-        tbody td {
-            padding: 14px 18px;
-            vertical-align: middle;
-            color: #1e2b3a;
-            line-height: 1.4;
-        }
-
-        /* ── Células especiais ── */
-        .cell-date {
-            font-weight: 500;
-            white-space: nowrap;
-        }
-
-        .cell-time {
-            font-weight: 500;
-            color: #0a4b7a;
-            white-space: nowrap;
-        }
-
-        .cell-patient {
-            font-weight: 500;
-        }
-
-        .cell-dentist {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: #e6eff8;
-            padding: 3px 14px 3px 10px;
-            border-radius: 40px;
-            font-size: 13px;
-            color: #0a2b4e;
-            white-space: nowrap;
-        }
-
-        .cell-dentist::before {
-            content: '🦷';
-            font-size: 15px;
-        }
-
-        .cell-status {
-            display: inline-block;
-            padding: 4px 16px;
-            border-radius: 40px;
-            font-size: 12px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-            white-space: nowrap;
-        }
-
-        .status-confirmado {
-            background: #d4edda;
-            color: #0a5e2a;
-        }
-
-        .status-pendente {
-            background: #fff3cd;
-            color: #7a5a0a;
-        }
-
-        .status-cancelado {
-            background: #f8d7da;
-            color: #7a1a2a;
-        }
-
-        .status-finalizado {
-            background: #d1ecf1;
-            color: #0a5a6a;
-        }
-
-        .status-default {
-            background: #e9ecef;
-            color: #4a5a6a;
-        }
-
-        /* ── Mensagem de vazio / loading ── */
-        .empty-state {
-            text-align: center;
-            padding: 70px 20px;
-            color: #6a7f92;
-        }
-
-        .empty-state .emoji {
-            font-size: 48px;
-            margin-bottom: 16px;
-        }
-
-        .empty-state h3 {
-            font-size: 20px;
-            font-weight: 500;
-            color: #1e2b3a;
-            margin-bottom: 6px;
-        }
-
-        .empty-state p {
-            font-size: 15px;
-        }
-
-        .loading-state {
-            text-align: center;
-            padding: 70px 20px;
-            color: #6a7f92;
-        }
-
-        .loading-state .spinner {
-            display: inline-block;
-            width: 42px;
-            height: 42px;
-            border: 4px solid #dce6ef;
-            border-top-color: #1a4b7a;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            margin-bottom: 18px;
-        }
-
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        /* ── Rodapé ── */
-        footer {
-            margin-top: 40px;
-            text-align: center;
-            font-size: 14px;
-            color: #7a8d9e;
-            border-top: 1px solid #dce6ef;
-            padding-top: 24px;
-        }
-
-        footer a {
-            color: #1a4b7a;
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-        footer a:hover {
-            text-decoration: underline;
-        }
-
-        /* ── Responsivo ── */
-        @media (max-width: 900px) {
-            header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 14px;
-                padding: 24px 22px;
-            }
-
-            header h1 {
-                font-size: 22px;
-            }
-
-            .toolbar {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .toolbar .filter-group {
-                flex-wrap: wrap;
-            }
-
-            .toolbar .filter-group select,
-            .toolbar .filter-group input[type="date"] {
-                flex: 1 1 140px;
-            }
-
-            .status-bar {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 8px;
-            }
-
-            thead th,
-            tbody td {
-                padding: 11px 14px;
-                font-size: 13px;
-            }
-
-            table {
-                font-size: 13px;
-                min-width: 600px;
-            }
-
-            .cell-dentist {
-                font-size: 12px;
-                padding: 2px 12px 2px 8px;
-            }
-        }
-
-        @media (max-width: 500px) {
-            body {
-                padding: 14px 10px;
-            }
-
-            header {
-                padding: 18px 16px;
-            }
-
-            header h1 {
-                font-size: 18px;
-            }
-
-            .toolbar {
-                padding: 12px 16px;
-            }
-
-            .toolbar .search-box input {
-                font-size: 14px;
-                padding: 10px 6px;
-            }
-
-            thead th,
-            tbody td {
-                padding: 9px 10px;
-                font-size: 12px;
-            }
-
-            table {
-                font-size: 12px;
-                min-width: 480px;
-            }
-
-            .cell-dentist {
-                font-size: 11px;
-                padding: 2px 10px 2px 6px;
-            }
-
-            .cell-status {
-                font-size: 10px;
-                padding: 3px 12px;
-            }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agenda Odontológica · Login</title>
+  <style>
+    /* ── Reset & base ── */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f0f5f9;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    /* ── Tela de login ── */
+    #loginScreen {
+      background: #ffffff;
+      max-width: 440px;
+      margin: 0 auto;
+      padding: 40px 35px;
+      border-radius: 28px;
+      box-shadow: 0 20px 60px rgba(10, 43, 78, 0.15);
+      border: 1px solid #e2eaf1;
+      transition: 0.3s;
+    }
+
+    #loginScreen h2 {
+      font-size: 26px;
+      color: #0a2b4e;
+      margin-bottom: 8px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    #loginScreen .sub {
+      color: #6a7f92;
+      font-size: 15px;
+      margin-bottom: 30px;
+    }
+
+    .form-group {
+      margin-bottom: 22px;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 500;
+      color: #1e2b3a;
+      font-size: 14px;
+      margin-bottom: 6px;
+    }
+
+    .form-group select,
+    .form-group input {
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: 14px;
+      border: 1px solid #dce6ef;
+      background: #f7fafd;
+      font-size: 15px;
+      color: #1e2b3a;
+      outline: none;
+      transition: 0.2s;
+    }
+
+    .form-group select:focus,
+    .form-group input:focus {
+      border-color: #1a4b7a;
+      background: #fff;
+      box-shadow: 0 0 0 4px rgba(26, 75, 122, 0.08);
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, #0a2b4e, #1a4b7a);
+      color: #fff;
+      border: none;
+      border-radius: 40px;
+      font-size: 17px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.25s;
+      margin-top: 8px;
+      letter-spacing: 0.5px;
+    }
+
+    .login-btn:hover {
+      transform: scale(1.01);
+      box-shadow: 0 8px 25px rgba(10, 43, 78, 0.25);
+    }
+
+    .login-btn:active {
+      transform: scale(0.97);
+    }
+
+    .login-error {
+      color: #b02a37;
+      background: #f8d7da;
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-size: 14px;
+      margin-top: 18px;
+      display: none;
+      border-left: 4px solid #b02a37;
+    }
+
+    .login-error.show {
+      display: block;
+    }
+
+    /* ── Após login (agenda) ── */
+    #agendaScreen {
+      display: none;
+    }
+
+    header {
+      background: linear-gradient(135deg, #0a2b4e, #1a4b7a);
+      color: #fff;
+      padding: 24px 30px;
+      border-radius: 18px;
+      margin-bottom: 30px;
+      box-shadow: 0 8px 25px rgba(10, 43, 78, 0.25);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header h1 {
+      font-size: 26px;
+      font-weight: 600;
+    }
+
+    header h1 span {
+      font-weight: 300;
+      opacity: 0.8;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    .user-info .dentist-badge {
+      background: rgba(255, 255, 255, 0.18);
+      padding: 8px 22px;
+      border-radius: 40px;
+      font-size: 14px;
+      backdrop-filter: blur(2px);
+    }
+
+    .logout-btn {
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+      padding: 8px 22px;
+      border-radius: 40px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .logout-btn:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    /* ── Barra de ferramentas (filtros) ── */
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-bottom: 25px;
+      align-items: center;
+      background: #fff;
+      padding: 16px 24px;
+      border-radius: 14px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+      border: 1px solid #e2eaf1;
+    }
+
+    .toolbar .search-box {
+      flex: 1 1 240px;
+      display: flex;
+      align-items: center;
+      background: #f4f8fc;
+      border-radius: 40px;
+      padding: 0 18px;
+      border: 1px solid #dce6ef;
+      transition: 0.2s;
+    }
+
+    .toolbar .search-box:focus-within {
+      border-color: #1a4b7a;
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(26, 75, 122, 0.10);
+    }
+
+    .toolbar .search-box input {
+      border: none;
+      background: transparent;
+      padding: 12px 10px;
+      font-size: 15px;
+      width: 100%;
+      outline: none;
+      color: #1e2b3a;
+    }
+
+    .toolbar .search-box .icon {
+      color: #7a8d9e;
+      font-size: 18px;
+    }
+
+    .toolbar .filter-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .toolbar .filter-group input[type="date"] {
+      padding: 10px 16px;
+      border-radius: 40px;
+      border: 1px solid #dce6ef;
+      background: #f4f8fc;
+      font-size: 14px;
+      color: #1e2b3a;
+      outline: none;
+      cursor: pointer;
+      transition: 0.2s;
+      min-width: 140px;
+    }
+
+    .toolbar .filter-group input[type="date"]:focus {
+      border-color: #1a4b7a;
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(26, 75, 122, 0.10);
+    }
+
+    .btn-reset {
+      background: #eaf0f6;
+      border: none;
+      padding: 10px 22px;
+      border-radius: 40px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #1e2b3a;
+      cursor: pointer;
+      transition: 0.2s;
+      border: 1px solid transparent;
+    }
+
+    .btn-reset:hover {
+      background: #dce6ef;
+      border-color: #c0cedc;
+    }
+
+    /* ── Status ── */
+    .status-bar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+      padding: 0 6px;
+    }
+
+    .status-bar .count {
+      font-size: 15px;
+      color: #3e566b;
+      background: #fff;
+      padding: 6px 20px;
+      border-radius: 40px;
+      box-shadow: 0 1px 6px rgba(0, 0, 0, 0.04);
+      border: 1px solid #e2eaf1;
+    }
+
+    .status-bar .count strong {
+      color: #0a2b4e;
+    }
+
+    .status-bar .update-time {
+      font-size: 14px;
+      color: #6a7f92;
+    }
+
+    /* ── Tabela ── */
+    .table-wrapper {
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+      border: 1px solid #e2eaf1;
+      overflow: hidden;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14.5px;
+      min-width: 700px;
+    }
+
+    thead {
+      background: #f7fafd;
+      border-bottom: 2px solid #dce6ef;
+    }
+
+    thead th {
+      padding: 16px 18px;
+      text-align: left;
+      font-weight: 600;
+      color: #1a3a5a;
+      white-space: nowrap;
+      font-size: 13px;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      position: sticky;
+      top: 0;
+      background: #f7fafd;
+      z-index: 2;
+    }
+
+    thead th:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 20%;
+      height: 60%;
+      width: 1px;
+      background: #dce6ef;
+    }
+
+    thead th {
+      position: relative;
+    }
+
+    tbody tr {
+      border-bottom: 1px solid #eef4f9;
+      transition: background 0.15s;
+    }
+
+    tbody tr:hover {
+      background: #f6faff;
+    }
+
+    tbody tr:last-child {
+      border-bottom: none;
+    }
+
+    tbody td {
+      padding: 14px 18px;
+      vertical-align: middle;
+      color: #1e2b3a;
+      line-height: 1.4;
+    }
+
+    .cell-date {
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .cell-time {
+      font-weight: 500;
+      color: #0a4b7a;
+      white-space: nowrap;
+    }
+
+    .cell-patient {
+      font-weight: 500;
+    }
+
+    .cell-dentist {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #e6eff8;
+      padding: 3px 14px 3px 10px;
+      border-radius: 40px;
+      font-size: 13px;
+      color: #0a2b4e;
+      white-space: nowrap;
+    }
+
+    .cell-dentist::before {
+      content: '🦷';
+      font-size: 15px;
+    }
+
+    .cell-status {
+      display: inline-block;
+      padding: 4px 16px;
+      border-radius: 40px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      white-space: nowrap;
+    }
+
+    .status-confirmado {
+      background: #d4edda;
+      color: #0a5e2a;
+    }
+
+    .status-pendente {
+      background: #fff3cd;
+      color: #7a5a0a;
+    }
+
+    .status-cancelado {
+      background: #f8d7da;
+      color: #7a1a2a;
+    }
+
+    .status-finalizado {
+      background: #d1ecf1;
+      color: #0a5a6a;
+    }
+
+    .status-default {
+      background: #e9ecef;
+      color: #4a5a6a;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 70px 20px;
+      color: #6a7f92;
+    }
+
+    .empty-state .emoji {
+      font-size: 48px;
+      margin-bottom: 16px;
+    }
+
+    .empty-state h3 {
+      font-size: 20px;
+      font-weight: 500;
+      color: #1e2b3a;
+      margin-bottom: 6px;
+    }
+
+    .loading-state {
+      text-align: center;
+      padding: 70px 20px;
+      color: #6a7f92;
+    }
+
+    .loading-state .spinner {
+      display: inline-block;
+      width: 42px;
+      height: 42px;
+      border: 4px solid #dce6ef;
+      border-top-color: #1a4b7a;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-bottom: 18px;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    footer {
+      margin-top: 40px;
+      text-align: center;
+      font-size: 14px;
+      color: #7a8d9e;
+      border-top: 1px solid #dce6ef;
+      padding-top: 24px;
+    }
+
+    footer a {
+      color: #1a4b7a;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 900px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 14px;
+        padding: 20px;
+      }
+      header h1 {
+        font-size: 22px;
+      }
+      .toolbar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .toolbar .filter-group {
+        flex-wrap: wrap;
+      }
+      .status-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
+      thead th,
+      tbody td {
+        padding: 11px 14px;
+        font-size: 13px;
+      }
+      table {
+        font-size: 13px;
+        min-width: 600px;
+      }
+      #loginScreen {
+        padding: 30px 20px;
+      }
+    }
+
+    @media (max-width: 500px) {
+      body {
+        padding: 10px;
+      }
+      header {
+        padding: 16px;
+      }
+      header h1 {
+        font-size: 18px;
+      }
+      .toolbar {
+        padding: 12px 16px;
+      }
+      .toolbar .search-box input {
+        font-size: 14px;
+        padding: 10px 6px;
+      }
+      thead th,
+      tbody td {
+        padding: 9px 10px;
+        font-size: 12px;
+      }
+      table {
+        font-size: 12px;
+        min-width: 480px;
+      }
+      .cell-dentist {
+        font-size: 11px;
+        padding: 2px 10px 2px 6px;
+      }
+      .cell-status {
+        font-size: 10px;
+        padding: 3px 12px;
+      }
+      #loginScreen h2 {
+        font-size: 22px;
+      }
+    }
+  </style>
 </head>
 <body>
 
-    <div class="container">
+  <div class="container">
 
-        <!-- ─── HEADER ─── -->
-        <header>
-            <h1>🦷 Agenda <span>Odontológica</span></h1>
-            <div class="header-info">
-                <span class="badge"><i>📋</i> Consulta somente</span>
-                <span class="badge"><i>🔄</i> Dados em tempo real</span>
-            </div>
-        </header>
+    <!-- ─── TELA DE LOGIN ─── -->
+    <div id="loginScreen">
+      <h2>🦷 Acesso Restrito</h2>
+      <p class="sub">Selecione seu perfil e insira a senha para visualizar a agenda.</p>
 
-        <!-- ─── TOOLBAR ─── -->
-        <div class="toolbar">
-            <div class="search-box">
-                <span class="icon">🔍</span>
-                <input type="text" id="searchInput" placeholder="Pesquisar paciente, dentista, procedimento..." />
-            </div>
-            <div class="filter-group">
-                <select id="filterDentist">
-                    <option value="">Todos os dentistas</option>
-                </select>
-                <input type="date" id="filterDate" />
-                <button class="btn-reset" id="resetBtn">↺ Limpar filtros</button>
-            </div>
-        </div>
+      <div class="form-group">
+        <label for="dentistSelect">Dentista</label>
+        <select id="dentistSelect">
+          <option value="1">Dentista 1</option>
+          <option value="2">Dentista 2</option>
+          <option value="3">Dentista 3</option>
+        </select>
+      </div>
 
-        <!-- ─── STATUS ─── -->
-        <div class="status-bar">
-            <span class="count" id="rowCount">📊 <strong>0</strong> registros</span>
-            <span class="update-time" id="updateTime">⏱️ Atualizado agora</span>
-        </div>
+      <div class="form-group">
+        <label for="passwordInput">Senha</label>
+        <input type="password" id="passwordInput" placeholder="Digite sua senha" />
+      </div>
 
-        <!-- ─── TABELA ─── -->
-        <div class="table-wrapper">
-            <div id="tableContainer">
-                <!-- Loading inicial -->
-                <div class="loading-state" id="loadingState">
-                    <div class="spinner"></div>
-                    <p>Carregando agenda...</p>
-                </div>
-                <!-- Tabela será injetada aqui -->
-                <div id="tableContent" style="display:none;"></div>
-            </div>
-        </div>
+      <button class="login-btn" id="loginBtn">Entrar na Agenda</button>
 
-        <!-- ─── FOOTER ─── -->
-        <footer>
-            Dados obtidos da planilha da clínica &bull;
-            <a href="#" id="refreshLink">↻ Atualizar</a>
-            &bull; Somente para consulta
-        </footer>
-
+      <div class="login-error" id="loginError">Senha incorreta. Tente novamente.</div>
     </div>
 
-    <script>
-        (function() {
-            'use strict';
+    <!-- ─── AGENDA (após login) ─── -->
+    <div id="agendaScreen">
 
-            // ── URL do CSV (publicado) ──
-            const CSV_URL =
-                'https://docs.google.com/spreadsheets/d/e/2PACX-1vSbehLPnoBOhIrvPAy_4EElTGdhrTdMdrD6lbl9GMKnHMRJ0lkSKyUkVgJJxe3thX5s_8CqJxxQqyoI/pub?output=csv';
+      <header>
+        <h1>🦷 Agenda <span>Odontológica</span></h1>
+        <div class="user-info">
+          <span class="dentist-badge" id="loggedDentistBadge">👤 Dentista 1</span>
+          <button class="logout-btn" id="logoutBtn">Sair</button>
+        </div>
+      </header>
 
-            // ── DOM refs ──
-            const tableContent = document.getElementById('tableContent');
-            const loadingState = document.getElementById('loadingState');
-            const rowCount = document.getElementById('rowCount');
-            const updateTime = document.getElementById('updateTime');
-            const searchInput = document.getElementById('searchInput');
-            const filterDentist = document.getElementById('filterDentist');
-            const filterDate = document.getElementById('filterDate');
-            const resetBtn = document.getElementById('resetBtn');
-            const refreshLink = document.getElementById('refreshLink');
+      <div class="toolbar">
+        <div class="search-box">
+          <span class="icon">🔍</span>
+          <input type="text" id="searchInput" placeholder="Pesquisar paciente, procedimento..." />
+        </div>
+        <div class="filter-group">
+          <input type="date" id="filterDate" />
+          <button class="btn-reset" id="resetBtn">↺ Limpar filtros</button>
+        </div>
+      </div>
 
-            // ── Estado ──
-            let allRows = []; // array de objetos (cada coluna)
-            let headers = [];
-            let rawData = [];
+      <div class="status-bar">
+        <span class="count" id="rowCount">📊 <strong>0</strong> registros</span>
+        <span class="update-time" id="updateTime">⏱️ Atualizado agora</span>
+      </div>
 
-            // ── Utilitário: parse CSV (simples, respeita vírgulas e quebras) ──
-            function parseCSV(text) {
-                const lines = [];
-                let current = '';
-                let inQuotes = false;
-                for (let i = 0; i < text.length; i++) {
-                    const ch = text[i];
-                    if (inQuotes) {
-                        if (ch === '"') {
-                            if (i + 1 < text.length && text[i + 1] === '"') {
-                                current += '"';
-                                i++;
-                            } else {
-                                inQuotes = false;
-                            }
-                        } else {
-                            current += ch;
-                        }
-                    } else {
-                        if (ch === '"') {
-                            inQuotes = true;
-                        } else if (ch === '\n') {
-                            lines.push(current);
-                            current = '';
-                        } else if (ch === '\r') {
-                            // ignore
-                        } else {
-                            current += ch;
-                        }
-                    }
-                }
-                if (current) lines.push(current);
+      <div class="table-wrapper">
+        <div id="tableContainer">
+          <div class="loading-state" id="loadingState">
+            <div class="spinner"></div>
+            <p>Carregando agenda...</p>
+          </div>
+          <div id="tableContent" style="display:none;"></div>
+        </div>
+      </div>
 
-                return lines.map(line => {
-                    const cols = [];
-                    let col = '';
-                    let inQ = false;
-                    for (let i = 0; i < line.length; i++) {
-                        const ch = line[i];
-                        if (inQ) {
-                            if (ch === '"') {
-                                if (i + 1 < line.length && line[i + 1] === '"') {
-                                    col += '"';
-                                    i++;
-                                } else {
-                                    inQ = false;
-                                }
-                            } else {
-                                col += ch;
-                            }
-                        } else {
-                            if (ch === '"') {
-                                inQ = true;
-                            } else if (ch === ',') {
-                                cols.push(col.trim());
-                                col = '';
-                            } else {
-                                col += ch;
-                            }
-                        }
-                    }
-                    cols.push(col.trim());
-                    return cols;
-                });
+      <footer>
+        Dados da planilha &bull;
+        <a href="#" id="refreshLink">↻ Atualizar</a>
+        &bull; Somente consulta
+      </footer>
+    </div>
+
+  </div>
+
+  <script>
+    (function() {
+      'use strict';
+
+      // ── CONFIGURAÇÕES DE SENHA ──
+      const SENHAS = {
+        1: '123', // Dentista 1
+        2: '456', // Dentista 2
+        3: '789' // Dentista 3
+      };
+
+      // ── URL DO CSV (público) ──
+      const CSV_URL =
+        'https://docs.google.com/spreadsheets/d/e/2PACX-1vSbehLPnoBOhIrvPAy_4EElTGdhrTdMdrD6lbl9GMKnHMRJ0lkSKyUkVgJJxe3thX5s_8CqJxxQqyoI/pub?output=csv';
+
+      // ── DOM refs ──
+      const loginScreen = document.getElementById('loginScreen');
+      const agendaScreen = document.getElementById('agendaScreen');
+      const dentistSelect = document.getElementById('dentistSelect');
+      const passwordInput = document.getElementById('passwordInput');
+      const loginBtn = document.getElementById('loginBtn');
+      const loginError = document.getElementById('loginError');
+      const logoutBtn = document.getElementById('logoutBtn');
+      const loggedDentistBadge = document.getElementById('loggedDentistBadge');
+
+      const tableContent = document.getElementById('tableContent');
+      const loadingState = document.getElementById('loadingState');
+      const rowCount = document.getElementById('rowCount');
+      const updateTime = document.getElementById('updateTime');
+      const searchInput = document.getElementById('searchInput');
+      const filterDate = document.getElementById('filterDate');
+      const resetBtn = document.getElementById('resetBtn');
+      const refreshLink = document.getElementById('refreshLink');
+
+      // ── Estado ──
+      let allRows = [];
+      let headers = [];
+      let loggedDentist = null; // 1,2,3
+      let currentFilteredRows = [];
+
+      // ── Utilitário CSV ──
+      function parseCSV(text) {
+        const lines = [];
+        let current = '';
+        let inQuotes = false;
+        for (let i = 0; i < text.length; i++) {
+          const ch = text[i];
+          if (inQuotes) {
+            if (ch === '"') {
+              if (i + 1 < text.length && text[i + 1] === '"') {
+                current += '"';
+                i++;
+              } else {
+                inQuotes = false;
+              }
+            } else {
+              current += ch;
             }
-
-            // ── Normaliza nome das colunas ──
-            function normalizeHeader(str) {
-                return str
-                    .toLowerCase()
-                    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-                    .replace(/[^a-z0-9]/g, '_')
-                    .replace(/_+/g, '_')
-                    .replace(/^_|_$/g, '');
+          } else {
+            if (ch === '"') {
+              inQuotes = true;
+            } else if (ch === '\n') {
+              lines.push(current);
+              current = '';
+            } else if (ch === '\r') {
+              // ignore
+            } else {
+              current += ch;
             }
+          }
+        }
+        if (current) lines.push(current);
 
-            // ── Carrega dados ──
-            async function loadData() {
-                try {
-                    loadingState.style.display = 'block';
-                    tableContent.style.display = 'none';
-                    tableContent.innerHTML = '';
-
-                    const resp = await fetch(CSV_URL, {
-                        cache: 'no-store'
-                    });
-                    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-
-                    const text = await resp.text();
-                    const parsed = parseCSV(text);
-
-                    if (parsed.length < 2) {
-                        throw new Error('Planilha vazia ou formato inválido.');
-                    }
-
-                    // Cabeçalhos
-                    const rawHeaders = parsed[0];
-                    headers = rawHeaders.map(h => normalizeHeader(h) || 'coluna_' + (rawHeaders.indexOf(h) + 1));
-
-                    // Dados
-                    rawData = parsed.slice(1).filter(row => row.some(cell => cell !== ''));
-
-                    // Converte para objetos
-                    allRows = rawData.map(row => {
-                        const obj = {};
-                        headers.forEach((key, idx) => {
-                            obj[key] = (row[idx] || '').trim();
-                        });
-                        return obj;
-                    });
-
-                    // Preenche filtro de dentistas
-                    populateDentistFilter();
-
-                    // Renderiza
-                    renderTable(allRows);
-
-                    // Atualiza contador
-                    updateStats(allRows.length);
-
-                    loadingState.style.display = 'none';
-                    tableContent.style.display = 'block';
-
-                } catch (err) {
-                    console.error('Erro ao carregar:', err);
-                    loadingState.innerHTML = `
-                        <div class="empty-state">
-                            <div class="emoji">⚠️</div>
-                            <h3>Não foi possível carregar os dados</h3>
-                            <p>${err.message || 'Verifique a URL da planilha e tente novamente.'}</p>
-                            <p style="margin-top:12px;">
-                                <button class="btn-reset" onclick="location.reload()" style="padding:10px 28px;">
-                                    ↻ Tentar novamente
-                                </button>
-                            </p>
-                        </div>
-                    `;
-                    loadingState.style.display = 'block';
-                    tableContent.style.display = 'none';
+        return lines.map(line => {
+          const cols = [];
+          let col = '';
+          let inQ = false;
+          for (let i = 0; i < line.length; i++) {
+            const ch = line[i];
+            if (inQ) {
+              if (ch === '"') {
+                if (i + 1 < line.length && line[i + 1] === '"') {
+                  col += '"';
+                  i++;
+                } else {
+                  inQ = false;
                 }
+              } else {
+                col += ch;
+              }
+            } else {
+              if (ch === '"') {
+                inQ = true;
+              } else if (ch === ',') {
+                cols.push(col.trim());
+                col = '';
+              } else {
+                col += ch;
+              }
             }
+          }
+          cols.push(col.trim());
+          return cols;
+        });
+      }
 
-            // ── Popula select de dentistas ──
-            function populateDentistFilter() {
-                const dentistas = new Set();
-                allRows.forEach(row => {
-                    // tenta achar coluna que contenha "dentista" ou "profissional"
-                    const dentistKey = headers.find(h =>
-                        h.includes('dentista') || h.includes('profissional') || h.includes('medico') || h.includes(
-                            'doutor')
-                    );
-                    if (dentistKey) {
-                        const val = row[dentistKey] || '';
-                        if (val) dentistas.add(val);
-                    } else {
-                        // fallback: primeira coluna que pareça nome próprio
-                        for (const h of headers) {
-                            if (h.includes('nome') || h.includes('profissional')) {
-                                const val = row[h] || '';
-                                if (val) dentistas.add(val);
-                                break;
-                            }
-                        }
-                    }
-                });
+      function normalizeHeader(str) {
+        return str
+          .toLowerCase()
+          .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+          .replace(/[^a-z0-9]/g, '_')
+          .replace(/_+/g, '_')
+          .replace(/^_|_$/g, '');
+      }
 
-                // Se não encontrou nenhum dentista, tenta pegar da primeira coluna que não seja data/hora
-                if (dentistas.size === 0) {
-                    const skipKeys = ['data', 'dia', 'horario', 'hora', 'horário', 'paciente', 'procedimento', 'status',
-                        'obs'
-                    ];
-                    for (const h of headers) {
-                        if (skipKeys.some(sk => h.includes(sk))) continue;
-                        allRows.forEach(row => {
-                            const val = row[h] || '';
-                            if (val) dentistas.add(val);
-                        });
-                        if (dentistas.size > 0) break;
-                    }
-                }
+      // ── Carregar dados ──
+      async function loadData() {
+        try {
+          loadingState.style.display = 'block';
+          tableContent.style.display = 'none';
+          tableContent.innerHTML = '';
 
-                // Popula select
-                const currentVal = filterDentist.value;
-                filterDentist.innerHTML = '<option value="">Todos os dentistas</option>';
-                const sorted = Array.from(dentistas).sort();
-                sorted.forEach(d => {
-                    const opt = document.createElement('option');
-                    opt.value = d;
-                    opt.textContent = d;
-                    filterDentist.appendChild(opt);
-                });
-                if (currentVal && dentistas.has(currentVal)) {
-                    filterDentist.value = currentVal;
-                }
-            }
+          const resp = await fetch(CSV_URL, { cache: 'no-store' });
+          if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
 
-            // ── Renderiza tabela ──
-            function renderTable(rows) {
-                if (!rows || rows.length === 0) {
-                    tableContent.innerHTML = `
-                        <div class="empty-state">
-                            <div class="emoji">📭</div>
-                            <h3>Nenhum registro encontrado</h3>
-                            <p>Tente ajustar os filtros ou recarregar os dados.</p>
-                        </div>
-                    `;
-                    tableContent.style.display = 'block';
-                    updateStats(0);
-                    return;
-                }
+          const text = await resp.text();
+          const parsed = parseCSV(text);
 
-                // Define quais colunas exibir (prioriza as mais relevantes)
-                const priority = ['data', 'dia', 'horario', 'hora', 'horário', 'paciente', 'nome', 'dentista',
-                    'profissional', 'medico', 'procedimento', 'tratamento', 'status', 'situacao', 'obs', 'observacao'
-                ];
-                const orderedHeaders = [];
-                const remaining = [];
+          if (parsed.length < 2) throw new Error('Planilha vazia ou formato inválido.');
 
-                // Primeiro as prioritárias na ordem dada
-                for (const p of priority) {
-                    const found = headers.find(h => h.includes(p));
-                    if (found && !orderedHeaders.includes(found)) {
-                        orderedHeaders.push(found);
-                    }
-                }
-                // Depois as que sobraram
-                for (const h of headers) {
-                    if (!orderedHeaders.includes(h)) {
-                        remaining.push(h);
-                    }
-                }
-                const displayHeaders = [...orderedHeaders, ...remaining];
+          const rawHeaders = parsed[0];
+          headers = rawHeaders.map(h => normalizeHeader(h) || 'coluna_' + (rawHeaders.indexOf(h) + 1));
 
-                // Mapeia para nomes amigáveis
-                const friendlyNames = {
-                    data: 'Data',
-                    dia: 'Dia',
-                    horario: 'Horário',
-                    hora: 'Hora',
-                    horário: 'Horário',
-                    paciente: 'Paciente',
-                    nome: 'Nome',
-                    dentista: 'Dentista',
-                    profissional: 'Profissional',
-                    medico: 'Médico',
-                    procedimento: 'Procedimento',
-                    tratamento: 'Tratamento',
-                    status: 'Status',
-                    situacao: 'Situação',
-                    obs: 'Obs.',
-                    observacao: 'Observação'
-                };
+          const rawData = parsed.slice(1).filter(row => row.some(cell => cell !== ''));
 
-                function getFriendly(key) {
-                    for (const [k, v] of Object.entries(friendlyNames)) {
-                        if (key.includes(k)) return v;
-                    }
-                    return key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, ' ');
-                }
-
-                // Monta HTML da tabela
-                let html = '<table><thead><tr>';
-                for (const h of displayHeaders) {
-                    html += `<th>${getFriendly(h)}</th>`;
-                }
-                html += '</tr></thead><tbody>';
-
-                for (const row of rows) {
-                    html += '<tr>';
-                    for (const h of displayHeaders) {
-                        let val = row[h] || '';
-                        // Formatações especiais
-                        const lowerH = h.toLowerCase();
-                        // Se for status, aplica badge
-                        if (lowerH.includes('status') || lowerH.includes('situacao')) {
-                            const statusClass = getStatusClass(val);
-                            html += `<td><span class="cell-status ${statusClass}">${val || '—'}</span></td>`;
-                            continue;
-                        }
-                        // Se for dentista, aplica badge
-                        if (lowerH.includes('dentista') || lowerH.includes('profissional') || lowerH.includes(
-                            'medico')) {
-                            if (val) {
-                                html += `<td><span class="cell-dentist">${val}</span></td>`;
-                            } else {
-                                html += `<td>—</td>`;
-                            }
-                            continue;
-                        }
-                        // Se for data, formata
-                        if (lowerH.includes('data') || lowerH.includes('dia')) {
-                            html += `<td class="cell-date">${val || '—'}</td>`;
-                            continue;
-                        }
-                        // Se for hora
-                        if (lowerH.includes('hora') || lowerH.includes('horario') || lowerH.includes('horário')) {
-                            html += `<td class="cell-time">${val || '—'}</td>`;
-                            continue;
-                        }
-                        // Paciente / nome
-                        if (lowerH.includes('paciente') || lowerH.includes('nome')) {
-                            html += `<td class="cell-patient">${val || '—'}</td>`;
-                            continue;
-                        }
-                        // Demais
-                        html += `<td>${val || '—'}</td>`;
-                    }
-                    html += '</tr>';
-                }
-
-                html += '</tbody></table>';
-                tableContent.innerHTML = html;
-                tableContent.style.display = 'block';
-                updateStats(rows.length);
-            }
-
-            // ── Classe CSS para status ──
-            function getStatusClass(val) {
-                const v = val.toLowerCase().trim();
-                if (v.includes('confirm') || v.includes('agend') || v.includes('marc')) return 'status-confirmado';
-                if (v.includes('pendent') || v.includes('espera') || v.includes('aguard')) return 'status-pendente';
-                if (v.includes('cancel') || v.includes('desmarc') || v.includes('remov')) return 'status-cancelado';
-                if (v.includes('finaliz') || v.includes('conclu') || v.includes('realiz') || v.includes('feito'))
-                    return 'status-finalizado';
-                return 'status-default';
-            }
-
-            // ── Atualiza contador e hora ──
-            function updateStats(count) {
-                rowCount.innerHTML = `📊 <strong>${count}</strong> registro${count !== 1 ? 's' : ''}`;
-                const now = new Date();
-                const timeStr = now.toLocaleString('pt-BR', {
-                    day: '2-digit',
-                    month: '2-digit',
-                    year: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    second: '2-digit'
-                });
-                updateTime.textContent = `⏱️ Atualizado às ${timeStr}`;
-            }
-
-            // ── Filtros ──
-            function applyFilters() {
-                const searchTerm = searchInput.value.toLowerCase().trim();
-                const dentistFilter = filterDentist.value;
-                const dateFilter = filterDate.value;
-
-                // Descobre quais colunas usar para filtrar
-                const searchableKeys = headers.filter(h =>
-                    h.includes('paciente') || h.includes('nome') ||
-                    h.includes('dentista') || h.includes('profissional') ||
-                    h.includes('procedimento') || h.includes('tratamento') ||
-                    h.includes('obs') || h.includes('observacao') ||
-                    h.includes('medico')
-                );
-
-                const dentistKey = headers.find(h =>
-                    h.includes('dentista') || h.includes('profissional') || h.includes('medico')
-                );
-
-                const dateKey = headers.find(h =>
-                    h.includes('data') || h.includes('dia')
-                );
-
-                const filtered = allRows.filter(row => {
-                    // Filtro de busca
-                    if (searchTerm) {
-                        let found = false;
-                        for (const key of searchableKeys) {
-                            const val = (row[key] || '').toLowerCase();
-                            if (val.includes(searchTerm)) { found = true; break; }
-                        }
-                        if (!found) return false;
-                    }
-
-                    // Filtro de dentista
-                    if (dentistFilter && dentistKey) {
-                        const val = row[dentistKey] || '';
-                        if (val !== dentistFilter) return false;
-                    }
-
-                    // Filtro de data
-                    if (dateFilter && dateKey) {
-                        const val = row[dateKey] || '';
-                        // tenta comparar de várias formas
-                        const normalizedDate = dateFilter.replace(/-/g, '');
-                        const valClean = val.replace(/[^0-9]/g, '');
-                        if (!valClean.includes(normalizedDate) && !val.includes(dateFilter)) {
-                            return false;
-                        }
-                    }
-
-                    return true;
-                });
-
-                renderTable(filtered);
-            }
-
-            // ── Event listeners ──
-            searchInput.addEventListener('input', applyFilters);
-            filterDentist.addEventListener('change', applyFilters);
-            filterDate.addEventListener('change', applyFilters);
-
-            resetBtn.addEventListener('click', function() {
-                searchInput.value = '';
-                filterDentist.value = '';
-                filterDate.value = '';
-                applyFilters();
+          allRows = rawData.map(row => {
+            const obj = {};
+            headers.forEach((key, idx) => {
+              obj[key] = (row[idx] || '').trim();
             });
+            return obj;
+          });
 
-            refreshLink.addEventListener('click', function(e) {
-                e.preventDefault();
-                loadData();
-            });
+          loadingState.style.display = 'none';
+          tableContent.style.display = 'block';
 
-            // ── Inicializa ──
+          // Aplica filtro do dentista logado e renderiza
+          applyFiltersAndRender();
+
+        } catch (err) {
+          console.error(err);
+          loadingState.innerHTML = `
+            <div class="empty-state">
+              <div class="emoji">⚠️</div>
+              <h3>Erro ao carregar dados</h3>
+              <p>${err.message || 'Verifique a URL da planilha.'}</p>
+              <p style="margin-top:12px;">
+                <button class="btn-reset" onclick="location.reload()" style="padding:10px 28px;">
+                  ↻ Tentar novamente
+                </button>
+              </p>
+            </div>
+          `;
+          loadingState.style.display = 'block';
+          tableContent.style.display = 'none';
+        }
+      }
+
+      // ── Filtro principal (dentista + busca + data) ──
+      function applyFiltersAndRender() {
+        if (!loggedDentist) return;
+
+        const searchTerm = searchInput.value.toLowerCase().trim();
+        const dateFilter = filterDate.value;
+
+        // Descobre qual coluna contém o nome do dentista
+        const dentistKey = headers.find(h =>
+          h.includes('dentista') || h.includes('profissional') || h.includes('medico')
+        );
+
+        // Colunas pesquisáveis
+        const searchableKeys = headers.filter(h =>
+          h.includes('paciente') || h.includes('nome') ||
+          h.includes('dentista') || h.includes('profissional') ||
+          h.includes('procedimento') || h.includes('tratamento') ||
+          h.includes('obs') || h.includes('observacao')
+        );
+
+        const dateKey = headers.find(h => h.includes('data') || h.includes('dia'));
+
+        // Nome do dentista logado (para filtrar)
+        const dentistName = `Dentista ${loggedDentist}`; // Exatamente como aparece na planilha? Ajustável.
+
+        const filtered = allRows.filter(row => {
+          // Filtro por dentista (ignora se não encontrar coluna)
+          if (dentistKey) {
+            const val = (row[dentistKey] || '').toLowerCase();
+            // tenta corresponder a "dentista 1", "dentista1", "1", etc.
+            const normalized = val.replace(/\s/g, '');
+            const target = dentistName.toLowerCase().replace(/\s/g, '');
+            if (!normalized.includes(target) && !val.includes(dentistName.toLowerCase())) {
+              return false;
+            }
+          } else {
+            // Se não houver coluna de dentista, exibe todos (mas com aviso)
+            // Vamos manter todos, mas o ideal é ter a coluna.
+          }
+
+          // Busca textual
+          if (searchTerm) {
+            let found = false;
+            for (const key of searchableKeys) {
+              const val = (row[key] || '').toLowerCase();
+              if (val.includes(searchTerm)) { found = true; break; }
+            }
+            if (!found) return false;
+          }
+
+          // Filtro de data
+          if (dateFilter && dateKey) {
+            const val = row[dateKey] || '';
+            const normalizedDate = dateFilter.replace(/-/g, '');
+            const valClean = val.replace(/[^0-9]/g, '');
+            if (!valClean.includes(normalizedDate) && !val.includes(dateFilter)) {
+              return false;
+            }
+          }
+
+          return true;
+        });
+
+        currentFilteredRows = filtered;
+        renderTable(filtered);
+        updateStats(filtered.length);
+      }
+
+      // ── Renderiza tabela ──
+      function renderTable(rows) {
+        if (!rows || rows.length === 0) {
+          tableContent.innerHTML = `
+            <div class="empty-state">
+              <div class="emoji">📭</div>
+              <h3>Nenhum registro encontrado</h3>
+              <p>Não há agendamentos para este dentista com os filtros atuais.</p>
+            </div>
+          `;
+          tableContent.style.display = 'block';
+          return;
+        }
+
+        // Definir colunas a exibir (prioridade)
+        const priority = ['data', 'dia', 'horario', 'hora', 'horário', 'paciente', 'nome', 'dentista',
+          'profissional', 'medico', 'procedimento', 'tratamento', 'status', 'situacao', 'obs', 'observacao'
+        ];
+        const orderedHeaders = [];
+        const remaining = [];
+        for (const p of priority) {
+          const found = headers.find(h => h.includes(p));
+          if (found && !orderedHeaders.includes(found)) orderedHeaders.push(found);
+        }
+        for (const h of headers) {
+          if (!orderedHeaders.includes(h)) remaining.push(h);
+        }
+        const displayHeaders = [...orderedHeaders, ...remaining];
+
+        const friendlyNames = {
+          data: 'Data',
+          dia: 'Dia',
+          horario: 'Horário',
+          hora: 'Hora',
+          horário: 'Horário',
+          paciente: 'Paciente',
+          nome: 'Nome',
+          dentista: 'Dentista',
+          profissional: 'Profissional',
+          medico: 'Médico',
+          procedimento: 'Procedimento',
+          tratamento: 'Tratamento',
+          status: 'Status',
+          situacao: 'Situação',
+          obs: 'Obs.',
+          observacao: 'Observação'
+        };
+
+        function getFriendly(key) {
+          for (const [k, v] of Object.entries(friendlyNames)) {
+            if (key.includes(k)) return v;
+          }
+          return key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, ' ');
+        }
+
+        let html = '<table><thead><tr>';
+        for (const h of displayHeaders) {
+          html += `<th>${getFriendly(h)}</th>`;
+        }
+        html += '</tr></thead><tbody>';
+
+        for (const row of rows) {
+          html += '<tr>';
+          for (const h of displayHeaders) {
+            let val = row[h] || '';
+            const lowerH = h.toLowerCase();
+            if (lowerH.includes('status') || lowerH.includes('situacao')) {
+              const statusClass = getStatusClass(val);
+              html += `<td><span class="cell-status ${statusClass}">${val || '—'}</span></td>`;
+              continue;
+            }
+            if (lowerH.includes('dentista') || lowerH.includes('profissional') || lowerH.includes('medico')) {
+              html += `<td><span class="cell-dentist">${val || '—'}</span></td>`;
+              continue;
+            }
+            if (lowerH.includes('data') || lowerH.includes('dia')) {
+              html += `<td class="cell-date">${val || '—'}</td>`;
+              continue;
+            }
+            if (lowerH.includes('hora') || lowerH.includes('horario') || lowerH.includes('horário')) {
+              html += `<td class="cell-time">${val || '—'}</td>`;
+              continue;
+            }
+            if (lowerH.includes('paciente') || lowerH.includes('nome')) {
+              html += `<td class="cell-patient">${val || '—'}</td>`;
+              continue;
+            }
+            html += `<td>${val || '—'}</td>`;
+          }
+          html += '</tr>';
+        }
+
+        html += '</tbody></table>';
+        tableContent.innerHTML = html;
+        tableContent.style.display = 'block';
+      }
+
+      function getStatusClass(val) {
+        const v = val.toLowerCase().trim();
+        if (v.includes('confirm') || v.includes('agend') || v.includes('marc')) return 'status-confirmado';
+        if (v.includes('pendent') || v.includes('espera') || v.includes('aguard')) return 'status-pendente';
+        if (v.includes('cancel') || v.includes('desmarc') || v.includes('remov')) return 'status-cancelado';
+        if (v.includes('finaliz') || v.includes('conclu') || v.includes('realiz') || v.includes('feito'))
+          return 'status-finalizado';
+        return 'status-default';
+      }
+
+      function updateStats(count) {
+        rowCount.innerHTML = `📊 <strong>${count}</strong> registro${count !== 1 ? 's' : ''}`;
+        const now = new Date();
+        const timeStr = now.toLocaleString('pt-BR', {
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit'
+        });
+        updateTime.textContent = `⏱️ Atualizado às ${timeStr}`;
+      }
+
+      // ── Login ──
+      function handleLogin() {
+        const dentist = parseInt(dentistSelect.value);
+        const password = passwordInput.value.trim();
+
+        if (SENHAS[dentist] === password) {
+          loggedDentist = dentist;
+          loginError.classList.remove('show');
+          loginScreen.style.display = 'none';
+          agendaScreen.style.display = 'block';
+
+          // Atualiza badge
+          loggedDentistBadge.textContent = `👤 Dentista ${dentist}`;
+
+          // Carrega dados (se já não carregados)
+          if (allRows.length === 0) {
             loadData();
+          } else {
+            applyFiltersAndRender();
+          }
+        } else {
+          loginError.classList.add('show');
+          passwordInput.value = '';
+          passwordInput.focus();
+        }
+      }
 
-        })();
-    </script>
+      // ── Logout ──
+      function handleLogout() {
+        loggedDentist = null;
+        agendaScreen.style.display = 'none';
+        loginScreen.style.display = 'block';
+        passwordInput.value = '';
+        loginError.classList.remove('show');
+        // Limpa a tabela
+        tableContent.innerHTML = '';
+        tableContent.style.display = 'none';
+        rowCount.innerHTML = '📊 <strong>0</strong> registros';
+      }
+
+      // ── Event listeners ──
+      loginBtn.addEventListener('click', handleLogin);
+      passwordInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') handleLogin();
+      });
+
+      logoutBtn.addEventListener('click', handleLogout);
+
+      searchInput.addEventListener('input', applyFiltersAndRender);
+      filterDate.addEventListener('change', applyFiltersAndRender);
+
+      resetBtn.addEventListener('click', function() {
+        searchInput.value = '';
+        filterDate.value = '';
+        applyFiltersAndRender();
+      });
+
+      refreshLink.addEventListener('click', function(e) {
+        e.preventDefault();
+        if (loggedDentist) loadData();
+      });
+
+      // Inicialmente, exibe a tela de login
+      loginScreen.style.display = 'block';
+      agendaScreen.style.display = 'none';
+
+    })();
+  </script>
 
 </body>
 </html>
