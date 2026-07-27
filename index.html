@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
-    <title>🔐 Gestão Financeira Premium</title>
+    <title>📊 Gestão Financeira Premium</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js">
     </script>
     <style>
@@ -44,99 +44,251 @@
             padding: 0;
             box-sizing: border-box;
         }
-        body {
-            font-family: 'Inter', system-ui, sans-serif;
-            background: var(--bg);
-            background-image:
-                radial-gradient(ellipse at 15% 20%, rgba(99, 102, 241, 0.08) 0%, transparent 55%),
-                radial-gradient(ellipse at 85% 75%, rgba(139, 92, 246, 0.07) 0%, transparent 55%),
-                radial-gradient(ellipse at 50% 50%, rgba(16, 185, 129, 0.04) 0%, transparent 70%),
-                radial-gradient(ellipse at 50% 0%, var(--accent-light) 0%, transparent 70%);
-            background-size: 100% 100%, 100% 100%, 100% 100%, 100% 400px;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-            display: flex;
-            min-height: 100vh;
-            color: var(--text);
-            transition: background 0.3s, color 0.2s;
-            position: relative;
-            overflow-x: hidden;
-        }
-        /* Formas decorativas de fundo */
-        body::before {
-            content: '';
-            position: fixed;
-            top: -120px;
-            right: -80px;
-            width: 450px;
-            height: 450px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(99, 102, 241, 0.06) 0%, transparent 70%);
-            pointer-events: none;
-            z-index: 0;
-            animation: floatBg1 20s ease-in-out infinite;
-        }
-        body::after {
-            content: '';
-            position: fixed;
-            bottom: -100px;
-            left: -90px;
-            width: 380px;
-            height: 380px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(16, 185, 129, 0.05) 0%, transparent 70%);
-            pointer-events: none;
-            z-index: 0;
-            animation: floatBg2 25s ease-in-out infinite;
-        }
-        @keyframes floatBg1 {
-            0%,
-            100% {
-                transform: translate(0, 0) scale(1);
-            }
-            25% {
-                transform: translate(-40px, 30px) scale(1.08);
-            }
-            50% {
-                transform: translate(20px, -20px) scale(0.95);
-            }
-            75% {
-                transform: translate(-15px, -35px) scale(1.05);
-            }
-        }
-        @keyframes floatBg2 {
-            0%,
-            100% {
-                transform: translate(0, 0) scale(1);
-            }
-            30% {
-                transform: translate(30px, -25px) scale(1.1);
-            }
-            60% {
-                transform: translate(-25px, 20px) scale(0.92);
-            }
-            85% {
-                transform: translate(10px, 30px) scale(1.06);
-            }
-        }
-        /* Grade sutil de pontos no fundo */
-        .bg-dots {
+        /* Canvas de partículas no fundo */
+        #particlesCanvas {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            pointer-events: none;
             z-index: 0;
-            opacity: 0.25;
-            background-image: radial-gradient(circle, var(--accent-light) 1px, transparent 1px);
-            background-size: 35px 35px;
-            mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
-            -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
+            pointer-events: none;
+            opacity: 0.6;
+            transition: opacity 0.5s;
         }
-        body.dark .bg-dots {
-            opacity: 0.15;
+        body.dark #particlesCanvas {
+            opacity: 0.35;
         }
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: var(--bg);
+            background-image: radial-gradient(ellipse at 50% 0%, var(--accent-light) 0%, transparent 70%);
+            background-size: 100% 400px;
+            background-repeat: no-repeat;
+            display: flex;
+            min-height: 100vh;
+            color: var(--text);
+            transition: background 0.2s, color 0.2s;
+            position: relative;
+        }
+        /* Overlay de fundo animado extra */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 20%, rgba(99, 102, 241, 0.06) 0%, transparent 50%),
+                radial-gradient(circle at 70% 60%, rgba(139, 92, 246, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 50% 80%, rgba(16, 185, 129, 0.04) 0%, transparent 50%);
+            z-index: -1;
+            animation: bgSlowPulse 20s ease-in-out infinite;
+            pointer-events: none;
+        }
+        @keyframes bgSlowPulse {
+            0%,
+            100% {
+                transform: translate(0, 0) scale(1);
+            }
+            25% {
+                transform: translate(1%, -0.5%) scale(1.02);
+            }
+            50% {
+                transform: translate(-0.5%, 1%) scale(0.98);
+            }
+            75% {
+                transform: translate(-1%, 0.5%) scale(1.01);
+            }
+        }
+        body.dark::before {
+            background: radial-gradient(circle at 30% 20%, rgba(129, 140, 248, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 70% 60%, rgba(167, 139, 250, 0.06) 0%, transparent 50%),
+                radial-gradient(circle at 50% 80%, rgba(52, 211, 153, 0.05) 0%, transparent 50%);
+        }
+        /* TELA DE LOGIN */
+        #loginOverlay {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeInOverlay 0.5s ease;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+        }
+        #loginOverlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        @keyframes fadeInOverlay {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        .login-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 28px;
+            padding: 40px 36px;
+            width: 380px;
+            max-width: 90vw;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.3);
+            text-align: center;
+            animation: cardSlideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        @keyframes cardSlideUp {
+            from {
+                transform: translateY(40px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        .login-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #6366f1, #8b5cf6, #10b981, #6366f1);
+            background-size: 300% 100%;
+            animation: shimmerBar 3s ease-in-out infinite;
+        }
+        @keyframes shimmerBar {
+            0%,
+            100% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+        .login-icon {
+            font-size: 3.5rem;
+            margin-bottom: 12px;
+            animation: floatIcon 3s ease-in-out infinite;
+        }
+        @keyframes floatIcon {
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+        .login-card h2 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 6px;
+            background: linear-gradient(135deg, #1e293b 0%, #6366f1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .login-card p {
+            font-size: 0.8rem;
+            color: #64748b;
+            margin-bottom: 24px;
+        }
+        .login-input-group {
+            display: flex;
+            gap: 0;
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 4px;
+            border: 2px solid #e2e8f0;
+            transition: all 0.3s;
+            overflow: hidden;
+        }
+        .login-input-group:focus-within {
+            border-color: #6366f1;
+            box-shadow: 0 0 0 6px rgba(99, 102, 241, 0.08);
+        }
+        .login-input-group input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            padding: 14px 18px;
+            font-size: 1.1rem;
+            letter-spacing: 0.3em;
+            font-weight: 600;
+            color: #1e293b;
+            outline: none;
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+        .login-input-group input::placeholder {
+            letter-spacing: 0;
+            font-weight: 400;
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+        .login-input-group button {
+            background: linear-gradient(135deg, #6366f1, #4f46e5);
+            border: none;
+            color: #fff;
+            padding: 14px 24px;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            white-space: nowrap;
+            letter-spacing: 0.5px;
+        }
+        .login-input-group button:hover {
+            background: linear-gradient(135deg, #4f46e5, #4338ca);
+            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.35);
+            transform: scale(1.03);
+        }
+        .login-error {
+            color: #ef4444;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 8px;
+            min-height: 20px;
+            transition: all 0.2s;
+            opacity: 0;
+        }
+        .login-error.show {
+            opacity: 1;
+            animation: shake 0.4s ease;
+        }
+        @keyframes shake {
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+            20%,
+            60% {
+                transform: translateX(-6px);
+            }
+            40%,
+            80% {
+                transform: translateX(6px);
+            }
+        }
+        .login-footer-text {
+            font-size: 0.65rem;
+            color: #94a3b8;
+            margin-top: 16px;
+            letter-spacing: 0.5px;
+        }
+        /* Resto do layout (mantido) */
         .sidebar {
             width: var(--sidebar-width);
             background: rgba(255, 255, 255, 0.65);
@@ -792,240 +944,6 @@
             color: #fff;
             border-color: var(--accent);
         }
-
-        /* ===== TELA DE LOGIN (SENHA) ===== */
-        .login-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 9999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 40%, #1a1a2e 60%, #0d1117 100%);
-            background-size: 400% 400%;
-            animation: gradientShift 12s ease infinite;
-            transition: opacity 0.5s ease, visibility 0.5s ease;
-        }
-        .login-overlay.hidden {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-        }
-        @keyframes gradientShift {
-            0% {
-                background-position: 0% 50%;
-            }
-            50% {
-                background-position: 100% 50%;
-            }
-            100% {
-                background-position: 0% 50%;
-            }
-        }
-        .login-overlay::before {
-            content: '';
-            position: absolute;
-            top: -150px;
-            right: -150px;
-            width: 500px;
-            height: 500px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(99, 102, 241, 0.2) 0%, transparent 70%);
-            animation: loginOrb1 8s ease-in-out infinite;
-            pointer-events: none;
-        }
-        .login-overlay::after {
-            content: '';
-            position: absolute;
-            bottom: -120px;
-            left: -120px;
-            width: 400px;
-            height: 400px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(139, 92, 246, 0.18) 0%, transparent 70%);
-            animation: loginOrb2 10s ease-in-out infinite;
-            pointer-events: none;
-        }
-        @keyframes loginOrb1 {
-            0%,
-            100% {
-                transform: translate(0, 0);
-            }
-            50% {
-                transform: translate(-50px, 40px);
-            }
-        }
-        @keyframes loginOrb2 {
-            0%,
-            100% {
-                transform: translate(0, 0);
-            }
-            50% {
-                transform: translate(40px, -30px);
-            }
-        }
-        .login-card {
-            position: relative;
-            z-index: 2;
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(30px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 28px;
-            padding: 45px 35px 35px;
-            width: 400px;
-            max-width: 92vw;
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.05) inset;
-            text-align: center;
-            animation: cardEntrance 0.7s cubic-bezier(0.22, 0.61, 0.36, 1);
-        }
-        @keyframes cardEntrance {
-            from {
-                opacity: 0;
-                transform: translateY(40px) scale(0.94);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-        .login-card .login-icon {
-            width: 70px;
-            height: 70px;
-            margin: 0 auto 20px;
-            background: linear-gradient(135deg, #6366f1, #8b5cf6);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);
-            animation: pulseIcon 2.5s ease-in-out infinite;
-        }
-        @keyframes pulseIcon {
-            0%,
-            100% {
-                box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);
-            }
-            50% {
-                box-shadow: 0 15px 45px rgba(99, 102, 241, 0.65);
-            }
-        }
-        .login-card h2 {
-            color: #fff;
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 6px;
-            letter-spacing: -0.3px;
-        }
-        .login-card .login-subtitle {
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 0.82rem;
-            margin-bottom: 28px;
-            font-weight: 500;
-        }
-        .login-input-group {
-            position: relative;
-            margin-bottom: 22px;
-        }
-        .login-input-group input {
-            width: 100%;
-            padding: 14px 18px 14px 48px;
-            border-radius: 16px;
-            border: 2px solid rgba(255, 255, 255, 0.18);
-            background: rgba(255, 255, 255, 0.06);
-            color: #fff;
-            font-size: 1rem;
-            font-family: inherit;
-            letter-spacing: 4px;
-            transition: all 0.3s;
-            outline: none;
-            text-align: center;
-        }
-        .login-input-group input::placeholder {
-            color: rgba(255, 255, 255, 0.35);
-            letter-spacing: 1px;
-        }
-        .login-input-group input:focus {
-            border-color: #818cf8;
-            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
-            background: rgba(255, 255, 255, 0.1);
-        }
-        .login-input-group .input-icon {
-            position: absolute;
-            left: 16px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 1.2rem;
-            color: rgba(255, 255, 255, 0.5);
-            pointer-events: none;
-        }
-        .login-btn {
-            width: 100%;
-            padding: 14px;
-            border-radius: 16px;
-            border: none;
-            background: linear-gradient(135deg, #6366f1, #8b5cf6);
-            color: #fff;
-            font-weight: 700;
-            font-size: 1rem;
-            cursor: pointer;
-            letter-spacing: 1px;
-            transition: all 0.3s;
-            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.35);
-            font-family: inherit;
-        }
-        .login-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 14px 35px rgba(99, 102, 241, 0.5);
-            background: linear-gradient(135deg, #7577f5, #9b6dff);
-        }
-        .login-btn:active {
-            transform: scale(0.97);
-        }
-        .login-error {
-            color: #f87171;
-            font-size: 0.78rem;
-            margin-top: 12px;
-            font-weight: 600;
-            min-height: 20px;
-            opacity: 0;
-            transform: translateY(-5px);
-            transition: all 0.3s;
-        }
-        .login-error.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        .login-hint {
-            color: rgba(255, 255, 255, 0.25);
-            font-size: 0.65rem;
-            margin-top: 16px;
-            letter-spacing: 1px;
-        }
-        .login-shake {
-            animation: shake 0.5s ease;
-        }
-        @keyframes shake {
-            0%,
-            100% {
-                transform: translateX(0);
-            }
-            20% {
-                transform: translateX(-8px);
-            }
-            40% {
-                transform: translateX(8px);
-            }
-            60% {
-                transform: translateX(-5px);
-            }
-            80% {
-                transform: translateX(5px);
-            }
-        }
         @media (max-width:768px) {
             .sidebar {
                 transform: translateX(-100%);
@@ -1052,28 +970,27 @@
                 font-size: 1.3rem;
             }
             .login-card {
-                padding: 30px 22px 28px;
+                padding: 28px 22px;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Fundo decorativo com pontos -->
-    <div class="bg-dots"></div>
+    <!-- Canvas de partículas animadas no fundo -->
+    <canvas id="particlesCanvas"></canvas>
 
-    <!-- TELA DE LOGIN (SENHA) -->
-    <div class="login-overlay" id="loginOverlay">
-        <div class="login-card" id="loginCard">
+    <!-- TELA DE LOGIN / BLOQUEIO -->
+    <div id="loginOverlay">
+        <div class="login-card">
             <div class="login-icon">🔐</div>
-            <h2>Área Restrita</h2>
-            <p class="login-subtitle">Digite a senha para acessar o sistema</p>
+            <h2>Acesso Restrito</h2>
+            <p>Digite a senha para acessar o painel</p>
             <div class="login-input-group">
-                <span class="input-icon">🔑</span>
-                <input type="password" id="senhaInput" placeholder="••••" maxlength="20" autocomplete="off">
+                <input type="password" id="loginPasswordInput" placeholder="••••" maxlength="20" autocomplete="off">
+                <button id="loginSubmitBtn">Entrar →</button>
             </div>
-            <button class="login-btn" id="loginBtn">Entrar</button>
             <div class="login-error" id="loginError">Senha incorreta</div>
-            <p class="login-hint">🔒 Sistema protegido</p>
+            <div class="login-footer-text">Painel Financeiro Premium • Sessão segura</div>
         </div>
     </div>
 
@@ -1430,71 +1347,176 @@
 
     <script>
         (function() {
-            // ========== SISTEMA DE LOGIN COM SENHA ==========
-            (function verificarAutenticacao() {
-                // Se já estiver autenticado nesta sessão, não mostra a tela de login
-                if (sessionStorage.getItem('_auth_gfp') === 'x7k2m9') {
-                    document.getElementById('loginOverlay').classList.add('hidden');
-                    return;
+            // ============ PARTÍCULAS DE FUNDO ANIMADAS ============
+            const particlesCanvas = document.getElementById('particlesCanvas');
+            const pCtx = particlesCanvas.getContext('2d');
+            let particlesArray = [];
+            const PARTICLE_COUNT = 80;
+
+            function resizeParticlesCanvas() {
+                particlesCanvas.width = window.innerWidth;
+                particlesCanvas.height = window.innerHeight;
+            }
+            resizeParticlesCanvas();
+            window.addEventListener('resize', () => {
+                resizeParticlesCanvas();
+                initParticles();
+            });
+
+            class Particle {
+                constructor() {
+                    this.reset();
+                    this.y = Math.random() * particlesCanvas.height;
                 }
+                reset() {
+                    this.x = Math.random() * particlesCanvas.width;
+                    this.y = -20;
+                    this.size = Math.random() * 2.5 + 1;
+                    this.speedY = Math.random() * 0.4 + 0.15;
+                    this.speedX = (Math.random() - 0.5) * 0.3;
+                    this.opacity = Math.random() * 0.5 + 0.2;
+                    this.hue = Math.random() < 0.5 ? 240 + Math.random() * 30 : 160 + Math.random() * 20;
+                }
+                update() {
+                    this.y += this.speedY;
+                    this.x += this.speedX;
+                    if (this.y > particlesCanvas.height + 20) this.reset();
+                    if (this.x < -20) this.x = particlesCanvas.width + 20;
+                    if (this.x > particlesCanvas.width + 20) this.x = -20;
+                }
+                draw(ctx) {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    const isDark = document.body.classList.contains('dark');
+                    const alpha = isDark ? this.opacity * 0.9 : this.opacity * 0.7;
+                    ctx.fillStyle = `hsla(${this.hue}, 70%, ${isDark ? '70%' : '55%'}, ${alpha})`;
+                    ctx.fill();
+                }
+            }
 
-                const overlay = document.getElementById('loginOverlay');
-                const input = document.getElementById('senhaInput');
-                const btn = document.getElementById('loginBtn');
-                const errorEl = document.getElementById('loginError');
-                const card = document.getElementById('loginCard');
+            function initParticles() {
+                particlesArray = [];
+                for (let i = 0; i < PARTICLE_COUNT; i++) {
+                    const p = new Particle();
+                    p.y = Math.random() * particlesCanvas.height;
+                    particlesArray.push(p);
+                }
+            }
+            initParticles();
 
-                // Verificação da senha (codificada para não ficar óbvia)
-                function verificarSenha(senhaDigitada) {
-                    // A senha correta é "2208" — codificada aqui como hash simples e comparação indireta
-                    const chave = 'MjIwOA=='; // base64 de "2208"
-                    // Decodifica e compara de forma ofuscada
-                    const decodificar = function(c) {
-                        return decodeURIComponent(Array.prototype.map.call(atob(c), function(x) {
-                            return '%' + ('00' + x.charCodeAt(0).toString(16)).slice(-2);
-                        }).join(''));
-                    };
-                    try {
-                        const senhaReal = decodificar(chave);
-                        return senhaDigitada === senhaReal;
-                    } catch (e) {
-                        return senhaDigitada === '2208'; // fallback
+            function animateParticles() {
+                pCtx.clearRect(0, 0, particlesCanvas.width, particlesCanvas.height);
+                for (const p of particlesArray) {
+                    p.update();
+                    p.draw(pCtx);
+                }
+                // Desenhar linhas de conexão entre partículas próximas
+                for (let i = 0; i < particlesArray.length; i++) {
+                    for (let j = i + 1; j < particlesArray.length; j++) {
+                        const dx = particlesArray[i].x - particlesArray[j].x;
+                        const dy = particlesArray[i].y - particlesArray[j].y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < 120) {
+                            const isDark = document.body.classList.contains('dark');
+                            const alpha = (1 - dist / 120) * 0.12;
+                            pCtx.beginPath();
+                            pCtx.moveTo(particlesArray[i].x, particlesArray[i].y);
+                            pCtx.lineTo(particlesArray[j].x, particlesArray[j].y);
+                            pCtx.strokeStyle = isDark ?
+                                `rgba(148,163,184,${alpha})` :
+                                `rgba(99,102,241,${alpha})`;
+                            pCtx.lineWidth = 0.5;
+                            pCtx.stroke();
+                        }
                     }
                 }
+                requestAnimationFrame(animateParticles);
+            }
+            animateParticles();
 
-                function tentarLogin() {
-                    const senha = input.value.trim();
-                    if (verificarSenha(senha)) {
-                        // Sucesso!
-                        sessionStorage.setItem('_auth_gfp', 'x7k2m9');
-                        overlay.classList.add('hidden');
-                        input.value = '';
-                        errorEl.classList.remove('show');
-                    } else {
-                        // Erro
-                        errorEl.classList.add('show');
-                        card.classList.add('login-shake');
-                        input.value = '';
-                        input.focus();
-                        setTimeout(() => card.classList.remove('login-shake'), 500);
-                    }
+            // ============ SISTEMA DE LOGIN E INATIVIDADE ============
+            // Senha escondida: 2208 (ofuscada com cálculo)
+            const _seed = 1104;
+            const _offset = 2;
+            const SENHA_CORRETA = String(_seed * _offset); // 1104 * 2 = "2208"
+
+            const loginOverlay = document.getElementById('loginOverlay');
+            const loginPasswordInput = document.getElementById('loginPasswordInput');
+            const loginSubmitBtn = document.getElementById('loginSubmitBtn');
+            const loginError = document.getElementById('loginError');
+            const INACTIVITY_TIMEOUT = 3 * 60 * 1000; // 3 minutos
+            let inactivityTimer = null;
+            let isAuthenticated = false;
+
+            function mostrarTelaLogin(mensagem) {
+                loginOverlay.classList.remove('hidden');
+                loginPasswordInput.value = '';
+                loginError.classList.remove('show');
+                loginError.textContent = mensagem || 'Sessão expirada por inatividade. Digite a senha novamente.';
+                loginPasswordInput.focus();
+                isAuthenticated = false;
+                clearTimeout(inactivityTimer);
+                inactivityTimer = null;
+            }
+
+            function esconderTelaLogin() {
+                loginOverlay.classList.add('hidden');
+                isAuthenticated = true;
+                resetInactivityTimer();
+            }
+
+            function resetInactivityTimer() {
+                clearTimeout(inactivityTimer);
+                if (isAuthenticated) {
+                    inactivityTimer = setTimeout(() => {
+                        mostrarTelaLogin('🔒 Sessão expirada por inatividade (3 min). Digite a senha novamente.');
+                    }, INACTIVITY_TIMEOUT);
                 }
+            }
 
-                btn.addEventListener('click', tentarLogin);
-                input.addEventListener('keydown', function(e) {
-                    if (e.key === 'Enter') {
-                        tentarLogin();
-                    }
-                });
+            function verificarSenha() {
+                const digitada = loginPasswordInput.value.trim();
+                if (digitada === SENHA_CORRETA) {
+                    loginError.classList.remove('show');
+                    esconderTelaLogin();
+                    loginPasswordInput.value = '';
+                } else {
+                    loginError.textContent = '❌ Senha incorreta. Tente novamente.';
+                    loginError.classList.add('show');
+                    loginPasswordInput.value = '';
+                    loginPasswordInput.focus();
+                    // Re-remove a classe após a animação para permitir re-adição
+                    setTimeout(() => loginError.classList.remove('show'), 500);
+                }
+            }
 
-                // Foco automático no campo de senha
-                setTimeout(() => input.focus(), 400);
+            loginSubmitBtn.addEventListener('click', verificarSenha);
+            loginPasswordInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') verificarSenha();
+            });
 
-                // Impedir acesso ao conteúdo antes de autenticar
-                overlay.classList.remove('hidden');
-            })();
+            // Monitorar atividade do usuário
+            const eventosAtividade = ['mousemove', 'mousedown', 'keydown', 'scroll', 'touchstart', 'touchmove',
+                'click'
+            ];
+            eventosAtividade.forEach(evt => {
+                document.addEventListener(evt, () => {
+                    if (isAuthenticated) resetInactivityTimer();
+                }, { passive: true });
+            });
 
-            // ========== SISTEMA PRINCIPAL ==========
+            // Também monitorar visibilidade da aba
+            document.addEventListener('visibilitychange', () => {
+                if (document.visibilityState === 'visible' && isAuthenticated) {
+                    resetInactivityTimer();
+                }
+            });
+
+            // Iniciar com a tela de login visível
+            loginOverlay.classList.remove('hidden');
+            loginPasswordInput.focus();
+
+            // ============ RESTANTE DO CÓDIGO ORIGINAL ============
             const $ = id => document.getElementById(id);
             const PUB_DOC =
                 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSWlUNgP29Erp8Rh5AZPg430wul7T9IwPBPgozPQpO2ig9g8gpJoTn4JNfcKAbBSNH59VngkPE4A7dF/pub';
@@ -1673,7 +1695,6 @@
 
             async function fetchData(gid, tipo) {
                 const url = `${PUB_DOC}?gid=${gid}&single=true&output=csv`;
-                console.log(`🔗 ${tipo}: ${url}`);
                 const resp = await fetch(url);
                 if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
                 const txt = await resp.text();
@@ -1873,6 +1894,7 @@
                     c.innerHTML = buildFilterHTML(p); }
                 populateFilterSelects(); }
 
+            /* ===== FUNÇÕES DE ATUALIZAÇÃO ===== */
             function updateResumo() { const f = filterData([...debitos, ...creditos], 'res'); const ent = sumBy(f, t => t
                     .tipo === 'credito'),
                     sai = sumBy(f, t => t.tipo === 'debito');
@@ -2127,6 +2149,7 @@
                 });
             }
 
+            /* ===== CALENDÁRIO GERAL ===== */
             function updateCalendario() {
                 const mes = +($('calMes')?.value || new Date().getMonth() + 1);
                 const ano = +($('calAno')?.value || new Date().getFullYear());
@@ -2222,6 +2245,7 @@
                 selectedDay = { ano: null, mes: null, dia: null };
             }
 
+            /* ===== COMPARATIVO ANUAL ===== */
             function updateComparativoAnual() {
                 const ar = $('compAno')?.value || '';
                 const anos = [...new Set([...creditos.map(t => t.ano), ...debitos.map(t => t.ano)])].sort((a, b) => a - b);
@@ -2259,6 +2283,7 @@
                 tbody.appendChild(frag);
             }
 
+            /* ===== ANÁLISE MENSAL ===== */
             function updateAnaliseMensal() {
                 const anoFiltro = $('amAno')?.value || '';
                 const todos = [...creditos, ...debitos];
@@ -2392,6 +2417,7 @@
                 }
             }
 
+            /* ===== EVENTOS E INICIALIZAÇÃO ===== */
             function bindEvents(pref, fn) {
                 ['Categoria', 'Pessoa', 'Status', 'FormaPagamento', 'Banco', 'Ano', 'Mes', 'Dia', 'Tipo'].forEach(s => {
                     const el = $(pref + s);
@@ -2506,6 +2532,7 @@
                 };
             }
 
+            /* ===== RELÓGIO ===== */
             function atualizarRelogio() {
                 const agora = new Date();
                 const hora = agora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
