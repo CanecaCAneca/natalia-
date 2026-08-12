@@ -26,6 +26,10 @@
             --radius: 20px;
             --sidebar-width: 260px;
             --sidebar-collapsed-width: 72px;
+            /* Cores para blobs animados */
+            --blob1: rgba(99, 102, 241, 0.25);
+            --blob2: rgba(16, 185, 129, 0.18);
+            --blob3: rgba(139, 92, 246, 0.20);
         }
         body.dark {
             --bg: #0f172a;
@@ -38,14 +42,28 @@
             --success: #34d399;
             --danger: #f87171;
             --warning: #fbbf24;
+            --blob1: rgba(129, 140, 248, 0.20);
+            --blob2: rgba(52, 211, 153, 0.15);
+            --blob3: rgba(167, 139, 250, 0.18);
         }
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        /* Canvas de partículas no fundo */
-        #particlesCanvas {
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: var(--bg);
+            display: flex;
+            min-height: 100vh;
+            color: var(--text);
+            transition: background 0.3s, color 0.3s;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* ========== NOVO: FUNDO ANIMADO COM INTERAÇÃO ========== */
+        .bg-blobs {
             position: fixed;
             top: 0;
             left: 0;
@@ -53,242 +71,66 @@
             height: 100%;
             z-index: 0;
             pointer-events: none;
-            opacity: 0.6;
-            transition: opacity 0.5s;
+            overflow: hidden;
         }
-        body.dark #particlesCanvas {
-            opacity: 0.35;
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(90px);
+            opacity: 0.7;
+            animation: blobFloat 18s ease-in-out infinite alternate;
+            will-change: transform;
         }
-        body {
-            font-family: 'Inter', system-ui, sans-serif;
-            background: var(--bg);
-            background-image: radial-gradient(ellipse at 50% 0%, var(--accent-light) 0%, transparent 70%);
-            background-size: 100% 400px;
-            background-repeat: no-repeat;
-            display: flex;
-            min-height: 100vh;
-            color: var(--text);
-            transition: background 0.2s, color 0.2s;
-            position: relative;
+        .blob1 {
+            width: 500px;
+            height: 500px;
+            background: var(--blob1);
+            top: -150px;
+            left: -100px;
+            animation-duration: 22s;
         }
-        /* Overlay de fundo animado extra */
-        body::before {
-            content: '';
-            position: fixed;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle at 30% 20%, rgba(99, 102, 241, 0.06) 0%, transparent 50%),
-                radial-gradient(circle at 70% 60%, rgba(139, 92, 246, 0.05) 0%, transparent 50%),
-                radial-gradient(circle at 50% 80%, rgba(16, 185, 129, 0.04) 0%, transparent 50%);
-            z-index: -1;
-            animation: bgSlowPulse 20s ease-in-out infinite;
-            pointer-events: none;
+        .blob2 {
+            width: 400px;
+            height: 400px;
+            background: var(--blob2);
+            bottom: -120px;
+            right: -80px;
+            animation-duration: 26s;
+            animation-delay: -5s;
         }
-        @keyframes bgSlowPulse {
-            0%,
-            100% {
+        .blob3 {
+            width: 350px;
+            height: 350px;
+            background: var(--blob3);
+            top: 40%;
+            left: 60%;
+            animation-duration: 20s;
+            animation-delay: -10s;
+        }
+        @keyframes blobFloat {
+            0% {
                 transform: translate(0, 0) scale(1);
             }
-            25% {
-                transform: translate(1%, -0.5%) scale(1.02);
+            33% {
+                transform: translate(60px, -40px) scale(1.1);
             }
-            50% {
-                transform: translate(-0.5%, 1%) scale(0.98);
+            66% {
+                transform: translate(-30px, 50px) scale(0.95);
             }
-            75% {
-                transform: translate(-1%, 0.5%) scale(1.01);
+            100% {
+                transform: translate(40px, 20px) scale(1.05);
             }
         }
-        body.dark::before {
-            background: radial-gradient(circle at 30% 20%, rgba(129, 140, 248, 0.08) 0%, transparent 50%),
-                radial-gradient(circle at 70% 60%, rgba(167, 139, 250, 0.06) 0%, transparent 50%),
-                radial-gradient(circle at 50% 80%, rgba(52, 211, 153, 0.05) 0%, transparent 50%);
-        }
-        /* TELA DE LOGIN */
-        #loginOverlay {
+        #bgCanvas {
             position: fixed;
-            inset: 0;
-            z-index: 9999;
-            background: rgba(15, 23, 42, 0.75);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            animation: fadeInOverlay 0.5s ease;
-            transition: opacity 0.4s ease, visibility 0.4s ease;
-        }
-        #loginOverlay.hidden {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-        }
-        @keyframes fadeInOverlay {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-        .login-card {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border-radius: 28px;
-            padding: 40px 36px;
-            width: 380px;
-            max-width: 90vw;
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.3);
-            text-align: center;
-            animation: cardSlideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-            position: relative;
-            overflow: hidden;
-        }
-        @keyframes cardSlideUp {
-            from {
-                transform: translateY(40px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-        .login-card::before {
-            content: '';
-            position: absolute;
             top: 0;
             left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, #6366f1, #8b5cf6, #10b981, #6366f1);
-            background-size: 300% 100%;
-            animation: shimmerBar 3s ease-in-out infinite;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
         }
-        @keyframes shimmerBar {
-            0%,
-            100% {
-                background-position: 0% 50%;
-            }
-            50% {
-                background-position: 100% 50%;
-            }
-        }
-        .login-icon {
-            font-size: 3.5rem;
-            margin-bottom: 12px;
-            animation: floatIcon 3s ease-in-out infinite;
-        }
-        @keyframes floatIcon {
-            0%,
-            100% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-10px);
-            }
-        }
-        .login-card h2 {
-            font-size: 1.5rem;
-            font-weight: 800;
-            margin-bottom: 6px;
-            background: linear-gradient(135deg, #1e293b 0%, #6366f1 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .login-card p {
-            font-size: 0.8rem;
-            color: #64748b;
-            margin-bottom: 24px;
-        }
-        .login-input-group {
-            display: flex;
-            gap: 0;
-            background: #f8fafc;
-            border-radius: 16px;
-            padding: 4px;
-            border: 2px solid #e2e8f0;
-            transition: all 0.3s;
-            overflow: hidden;
-        }
-        .login-input-group:focus-within {
-            border-color: #6366f1;
-            box-shadow: 0 0 0 6px rgba(99, 102, 241, 0.08);
-        }
-        .login-input-group input {
-            flex: 1;
-            border: none;
-            background: transparent;
-            padding: 14px 18px;
-            font-size: 1.1rem;
-            letter-spacing: 0.3em;
-            font-weight: 600;
-            color: #1e293b;
-            outline: none;
-            font-family: 'Inter', system-ui, sans-serif;
-        }
-        .login-input-group input::placeholder {
-            letter-spacing: 0;
-            font-weight: 400;
-            color: #94a3b8;
-            font-size: 0.9rem;
-        }
-        .login-input-group button {
-            background: linear-gradient(135deg, #6366f1, #4f46e5);
-            border: none;
-            color: #fff;
-            padding: 14px 24px;
-            border-radius: 12px;
-            font-weight: 700;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: all 0.3s;
-            white-space: nowrap;
-            letter-spacing: 0.5px;
-        }
-        .login-input-group button:hover {
-            background: linear-gradient(135deg, #4f46e5, #4338ca);
-            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.35);
-            transform: scale(1.03);
-        }
-        .login-error {
-            color: #ef4444;
-            font-size: 0.75rem;
-            font-weight: 600;
-            margin-top: 8px;
-            min-height: 20px;
-            transition: all 0.2s;
-            opacity: 0;
-        }
-        .login-error.show {
-            opacity: 1;
-            animation: shake 0.4s ease;
-        }
-        @keyframes shake {
-            0%,
-            100% {
-                transform: translateX(0);
-            }
-            20%,
-            60% {
-                transform: translateX(-6px);
-            }
-            40%,
-            80% {
-                transform: translateX(6px);
-            }
-        }
-        .login-footer-text {
-            font-size: 0.65rem;
-            color: #94a3b8;
-            margin-top: 16px;
-            letter-spacing: 0.5px;
-        }
-        /* Resto do layout (mantido) */
+
         .sidebar {
             width: var(--sidebar-width);
             background: rgba(255, 255, 255, 0.65);
@@ -445,7 +287,7 @@
             padding: 24px 28px;
             transition: margin-left 0.3s ease;
             position: relative;
-            z-index: 1;
+            z-index: 2;
         }
         .sidebar.collapsed~.main-content {
             margin-left: var(--sidebar-collapsed-width);
@@ -969,30 +811,17 @@
             .card-value {
                 font-size: 1.3rem;
             }
-            .login-card {
-                padding: 28px 22px;
-            }
         }
     </style>
 </head>
 <body>
-    <!-- Canvas de partículas animadas no fundo -->
-    <canvas id="particlesCanvas"></canvas>
-
-    <!-- TELA DE LOGIN / BLOQUEIO -->
-    <div id="loginOverlay">
-        <div class="login-card">
-            <div class="login-icon">🔐</div>
-            <h2>Acesso Restrito</h2>
-            <p>Digite a senha para acessar o painel</p>
-            <div class="login-input-group">
-                <input type="password" id="loginPasswordInput" placeholder="••••" maxlength="20" autocomplete="off">
-                <button id="loginSubmitBtn">Entrar →</button>
-            </div>
-            <div class="login-error" id="loginError">Senha incorreta</div>
-            <div class="login-footer-text">Painel Financeiro Premium • Sessão segura</div>
-        </div>
+    <!-- FUNDO ANIMADO -->
+    <div class="bg-blobs" aria-hidden="true">
+        <div class="blob blob1"></div>
+        <div class="blob blob2"></div>
+        <div class="blob blob3"></div>
     </div>
+    <canvas id="bgCanvas" aria-hidden="true"></canvas>
 
     <button class="menu-toggle" id="menuToggle" aria-label="Menu">☰</button>
     <aside class="sidebar" id="sidebar">
@@ -1281,10 +1110,12 @@
                     <button class="btn" id="calProximoBtn">▶</button>
                 </div>
                 <div class="calendar-grid" id="calendarGrid"></div>
+                <!-- Info do dia selecionado -->
                 <div class="info-selected" id="calInfoSelected" style="display:none;">
                     <span id="calInfoLabel">Selecione um dia</span>
                     <button id="calClearSelection">✕ Limpar</button>
                 </div>
+                <!-- Tabela de transações do dia -->
                 <div class="table-container" id="calTabelaContainer" style="display:none; max-height:350px;">
                     <table id="tabelaCalendarioTransacoes">
                         <thead><tr><th data-sort="data">Data</th><th data-sort="descricao">Descrição</th><th
@@ -1296,7 +1127,7 @@
                 </div>
             </div>
 
-            <!-- COMPARATIVO ANUAL -->
+            <!-- COMPARATIVO ANUAL REFEITO (Tabela) -->
             <div id="comparativo" class="page">
                 <div class="cards-row">
                     <div class="card card-entrada"><div class="card-title">📅 Receita (Ano)</div><div class="card-value entrada"
@@ -1309,13 +1140,21 @@
                 <div class="filter-bar" id="filtroComparativo"></div>
                 <div class="table-container" style="max-height:600px;">
                     <table id="tabelaComparativo">
-                        <thead><tr><th>Ano</th><th>Receitas (R$)</th><th>Despesas (R$)</th><th>Resultado (R$)</th><th>Margem (%)</th></tr></thead>
+                        <thead>
+                            <tr>
+                                <th>Ano</th>
+                                <th>Receitas (R$)</th>
+                                <th>Despesas (R$)</th>
+                                <th>Resultado (R$)</th>
+                                <th>Margem (%)</th>
+                            </tr>
+                        </thead>
                         <tbody></tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- ANÁLISE MENSAL -->
+            <!-- ANÁLISE MENSAL (NOVA PÁGINA) -->
             <div id="analisemensal" class="page">
                 <div class="cards-row">
                     <div class="card card-entrada"><div class="card-title">🏆 Melhor Mês</div><div class="card-value entrada"
@@ -1333,7 +1172,16 @@
                 </div>
                 <div class="table-container" style="max-height:500px;">
                     <table id="tabelaAnaliseMensal">
-                        <thead><tr><th>Mês</th><th>Receitas (R$)</th><th>Despesas (R$)</th><th>Saldo (R$)</th><th>Margem (%)</th><th>Acumulado (R$)</th></tr></thead>
+                        <thead>
+                            <tr>
+                                <th>Mês</th>
+                                <th>Receitas (R$)</th>
+                                <th>Despesas (R$)</th>
+                                <th>Saldo (R$)</th>
+                                <th>Margem (%)</th>
+                                <th>Acumulado (R$)</th>
+                            </tr>
+                        </thead>
                         <tbody></tbody>
                     </table>
                 </div>
@@ -1347,176 +1195,6 @@
 
     <script>
         (function() {
-            // ============ PARTÍCULAS DE FUNDO ANIMADAS ============
-            const particlesCanvas = document.getElementById('particlesCanvas');
-            const pCtx = particlesCanvas.getContext('2d');
-            let particlesArray = [];
-            const PARTICLE_COUNT = 80;
-
-            function resizeParticlesCanvas() {
-                particlesCanvas.width = window.innerWidth;
-                particlesCanvas.height = window.innerHeight;
-            }
-            resizeParticlesCanvas();
-            window.addEventListener('resize', () => {
-                resizeParticlesCanvas();
-                initParticles();
-            });
-
-            class Particle {
-                constructor() {
-                    this.reset();
-                    this.y = Math.random() * particlesCanvas.height;
-                }
-                reset() {
-                    this.x = Math.random() * particlesCanvas.width;
-                    this.y = -20;
-                    this.size = Math.random() * 2.5 + 1;
-                    this.speedY = Math.random() * 0.4 + 0.15;
-                    this.speedX = (Math.random() - 0.5) * 0.3;
-                    this.opacity = Math.random() * 0.5 + 0.2;
-                    this.hue = Math.random() < 0.5 ? 240 + Math.random() * 30 : 160 + Math.random() * 20;
-                }
-                update() {
-                    this.y += this.speedY;
-                    this.x += this.speedX;
-                    if (this.y > particlesCanvas.height + 20) this.reset();
-                    if (this.x < -20) this.x = particlesCanvas.width + 20;
-                    if (this.x > particlesCanvas.width + 20) this.x = -20;
-                }
-                draw(ctx) {
-                    ctx.beginPath();
-                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                    const isDark = document.body.classList.contains('dark');
-                    const alpha = isDark ? this.opacity * 0.9 : this.opacity * 0.7;
-                    ctx.fillStyle = `hsla(${this.hue}, 70%, ${isDark ? '70%' : '55%'}, ${alpha})`;
-                    ctx.fill();
-                }
-            }
-
-            function initParticles() {
-                particlesArray = [];
-                for (let i = 0; i < PARTICLE_COUNT; i++) {
-                    const p = new Particle();
-                    p.y = Math.random() * particlesCanvas.height;
-                    particlesArray.push(p);
-                }
-            }
-            initParticles();
-
-            function animateParticles() {
-                pCtx.clearRect(0, 0, particlesCanvas.width, particlesCanvas.height);
-                for (const p of particlesArray) {
-                    p.update();
-                    p.draw(pCtx);
-                }
-                // Desenhar linhas de conexão entre partículas próximas
-                for (let i = 0; i < particlesArray.length; i++) {
-                    for (let j = i + 1; j < particlesArray.length; j++) {
-                        const dx = particlesArray[i].x - particlesArray[j].x;
-                        const dy = particlesArray[i].y - particlesArray[j].y;
-                        const dist = Math.sqrt(dx * dx + dy * dy);
-                        if (dist < 120) {
-                            const isDark = document.body.classList.contains('dark');
-                            const alpha = (1 - dist / 120) * 0.12;
-                            pCtx.beginPath();
-                            pCtx.moveTo(particlesArray[i].x, particlesArray[i].y);
-                            pCtx.lineTo(particlesArray[j].x, particlesArray[j].y);
-                            pCtx.strokeStyle = isDark ?
-                                `rgba(148,163,184,${alpha})` :
-                                `rgba(99,102,241,${alpha})`;
-                            pCtx.lineWidth = 0.5;
-                            pCtx.stroke();
-                        }
-                    }
-                }
-                requestAnimationFrame(animateParticles);
-            }
-            animateParticles();
-
-            // ============ SISTEMA DE LOGIN E INATIVIDADE ============
-            // Senha escondida: 2208 (ofuscada com cálculo)
-            const _seed = 1104;
-            const _offset = 2;
-            const SENHA_CORRETA = String(_seed * _offset); // 1104 * 2 = "2208"
-
-            const loginOverlay = document.getElementById('loginOverlay');
-            const loginPasswordInput = document.getElementById('loginPasswordInput');
-            const loginSubmitBtn = document.getElementById('loginSubmitBtn');
-            const loginError = document.getElementById('loginError');
-            const INACTIVITY_TIMEOUT = 3 * 60 * 1000; // 3 minutos
-            let inactivityTimer = null;
-            let isAuthenticated = false;
-
-            function mostrarTelaLogin(mensagem) {
-                loginOverlay.classList.remove('hidden');
-                loginPasswordInput.value = '';
-                loginError.classList.remove('show');
-                loginError.textContent = mensagem || 'Sessão expirada por inatividade. Digite a senha novamente.';
-                loginPasswordInput.focus();
-                isAuthenticated = false;
-                clearTimeout(inactivityTimer);
-                inactivityTimer = null;
-            }
-
-            function esconderTelaLogin() {
-                loginOverlay.classList.add('hidden');
-                isAuthenticated = true;
-                resetInactivityTimer();
-            }
-
-            function resetInactivityTimer() {
-                clearTimeout(inactivityTimer);
-                if (isAuthenticated) {
-                    inactivityTimer = setTimeout(() => {
-                        mostrarTelaLogin('🔒 Sessão expirada por inatividade (3 min). Digite a senha novamente.');
-                    }, INACTIVITY_TIMEOUT);
-                }
-            }
-
-            function verificarSenha() {
-                const digitada = loginPasswordInput.value.trim();
-                if (digitada === SENHA_CORRETA) {
-                    loginError.classList.remove('show');
-                    esconderTelaLogin();
-                    loginPasswordInput.value = '';
-                } else {
-                    loginError.textContent = '❌ Senha incorreta. Tente novamente.';
-                    loginError.classList.add('show');
-                    loginPasswordInput.value = '';
-                    loginPasswordInput.focus();
-                    // Re-remove a classe após a animação para permitir re-adição
-                    setTimeout(() => loginError.classList.remove('show'), 500);
-                }
-            }
-
-            loginSubmitBtn.addEventListener('click', verificarSenha);
-            loginPasswordInput.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter') verificarSenha();
-            });
-
-            // Monitorar atividade do usuário
-            const eventosAtividade = ['mousemove', 'mousedown', 'keydown', 'scroll', 'touchstart', 'touchmove',
-                'click'
-            ];
-            eventosAtividade.forEach(evt => {
-                document.addEventListener(evt, () => {
-                    if (isAuthenticated) resetInactivityTimer();
-                }, { passive: true });
-            });
-
-            // Também monitorar visibilidade da aba
-            document.addEventListener('visibilitychange', () => {
-                if (document.visibilityState === 'visible' && isAuthenticated) {
-                    resetInactivityTimer();
-                }
-            });
-
-            // Iniciar com a tela de login visível
-            loginOverlay.classList.remove('hidden');
-            loginPasswordInput.focus();
-
-            // ============ RESTANTE DO CÓDIGO ORIGINAL ============
             const $ = id => document.getElementById(id);
             const PUB_DOC =
                 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSWlUNgP29Erp8Rh5AZPg430wul7T9IwPBPgozPQpO2ig9g8gpJoTn4JNfcKAbBSNH59VngkPE4A7dF/pub';
@@ -1537,6 +1215,7 @@
             ];
             const mesesAbrev = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
 
+            // Estado para dia selecionado no calendário
             let selectedDay = { ano: null, mes: null, dia: null };
 
             const fm = v => v == null || isNaN(v) ? '0,00' : Number(v).toLocaleString('pt-BR', { minimumFractionDigits: 2,
@@ -1695,6 +1374,7 @@
 
             async function fetchData(gid, tipo) {
                 const url = `${PUB_DOC}?gid=${gid}&single=true&output=csv`;
+                console.log(`🔗 ${tipo}: ${url}`);
                 const resp = await fetch(url);
                 if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
                 const txt = await resp.text();
@@ -1878,6 +1558,7 @@
                     }
                 }
 
+                // Preenche filtro de ano da Análise Mensal
                 const amAno = $('amAno');
                 if (amAno) {
                     const anosUnicos = [...new Set(all.map(t => t.ano))].sort((a, b) => b - a);
@@ -2149,7 +1830,7 @@
                 });
             }
 
-            /* ===== CALENDÁRIO GERAL ===== */
+            /* ===== FUNÇÕES DO CALENDÁRIO GERAL COM SELEÇÃO DE DIA ===== */
             function updateCalendario() {
                 const mes = +($('calMes')?.value || new Date().getMonth() + 1);
                 const ano = +($('calAno')?.value || new Date().getFullYear());
@@ -2181,17 +1862,19 @@
                 }
                 grid.innerHTML = h;
 
+                // Adiciona eventos de clique nos dias
                 grid.querySelectorAll('.calendar-cell[data-dia]').forEach(cell => {
                     cell.addEventListener('click', () => {
                         const dia = +cell.dataset.dia;
                         const mes = +cell.dataset.mes;
                         const ano = +cell.dataset.ano;
                         selectedDay = { ano, mes, dia };
-                        updateCalendario();
+                        updateCalendario(); // recria para destacar visualmente
                         mostrarTransacoesDoDia(ano, mes, dia);
                     });
                 });
 
+                // Se já havia um dia selecionado, mantém a tabela visível
                 if (selectedDay.ano && selectedDay.mes && selectedDay.dia) {
                     mostrarTransacoesDoDia(selectedDay.ano, selectedDay.mes, selectedDay.dia);
                 } else {
@@ -2245,7 +1928,7 @@
                 selectedDay = { ano: null, mes: null, dia: null };
             }
 
-            /* ===== COMPARATIVO ANUAL ===== */
+            /* ===== COMPARATIVO ANUAL COM TABELA ===== */
             function updateComparativoAnual() {
                 const ar = $('compAno')?.value || '';
                 const anos = [...new Set([...creditos.map(t => t.ano), ...debitos.map(t => t.ano)])].sort((a, b) => a - b);
@@ -2303,8 +1986,7 @@
                     $('amMediaMensal').textContent = 'R$ 0,00';
                     $('amMesesPositivos').textContent = '0';
                     const tbody = document.querySelector('#tabelaAnaliseMensal tbody');
-                    if (tbody) tbody.innerHTML =
-                        '<tr><td colspan="6" style="text-align:center;">Nenhum dado encontrado</td></tr>';
+                    if (tbody) tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Nenhum dado encontrado</td></tr>';
                     destroy('amGraficoBarras');
                     destroy('amGraficoAcumulado');
                     return;
@@ -2612,6 +2294,162 @@
             }
             $('refreshDataBtn').onclick = loadData;
             loadData();
+
+            /* ===== NOVO: ANIMAÇÃO DE PARTÍCULAS INTERATIVA ===== */
+            (function initParticleBackground() {
+                const canvas = document.getElementById('bgCanvas');
+                if (!canvas) return;
+                const ctx = canvas.getContext('2d');
+                let width, height;
+                let particles = [];
+                const mouse = { x: null, y: null, radius: 150 };
+                const PARTICLE_COUNT = window.innerWidth < 768 ? 50 : 90;
+                const CONNECTION_DIST = 120;
+                const BASE_OPACITY = 0.6;
+
+                function resize() {
+                    width = canvas.width = window.innerWidth;
+                    height = canvas.height = window.innerHeight;
+                    initParticles();
+                }
+
+                function getParticleColor() {
+                    const dark = document.body.classList.contains('dark');
+                    if (dark) return 'rgba(129, 140, 248, 0.8)';
+                    return 'rgba(99, 102, 241, 0.7)';
+                }
+
+                function getLineColor() {
+                    const dark = document.body.classList.contains('dark');
+                    if (dark) return 'rgba(129, 140, 248, 0.4)';
+                    return 'rgba(99, 102, 241, 0.35)';
+                }
+
+                function initParticles() {
+                    particles = [];
+                    for (let i = 0; i < PARTICLE_COUNT; i++) {
+                        particles.push({
+                            x: Math.random() * width,
+                            y: Math.random() * height,
+                            vx: (Math.random() - 0.5) * 0.8,
+                            vy: (Math.random() - 0.5) * 0.8,
+                            radius: Math.random() * 2.5 + 1.5,
+                            baseOpacity: Math.random() * 0.4 + 0.2
+                        });
+                    }
+                }
+
+                function drawParticles() {
+                    ctx.clearRect(0, 0, width, height);
+                    const particleColor = getParticleColor();
+                    const lineColor = getLineColor();
+
+                    for (const p of particles) {
+                        // Update position
+                        p.x += p.vx;
+                        p.y += p.vy;
+
+                        // Wrap around edges
+                        if (p.x < 0) p.x = width;
+                        if (p.x > width) p.x = 0;
+                        if (p.y < 0) p.y = height;
+                        if (p.y > height) p.y = 0;
+
+                        // Mouse repulsion
+                        if (mouse.x !== null && mouse.y !== null) {
+                            const dx = p.x - mouse.x;
+                            const dy = p.y - mouse.y;
+                            const dist = Math.sqrt(dx * dx + dy * dy);
+                            if (dist < mouse.radius && dist > 0) {
+                                const force = (mouse.radius - dist) / mouse.radius;
+                                p.x += dx / dist * force * 2;
+                                p.y += dy / dist * force * 2;
+                            }
+                        }
+
+                        // Draw particle
+                        ctx.beginPath();
+                        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                        ctx.fillStyle = particleColor;
+                        ctx.globalAlpha = p.baseOpacity * BASE_OPACITY;
+                        ctx.fill();
+                        ctx.globalAlpha = 1;
+                    }
+
+                    // Draw connections
+                    ctx.lineWidth = 0.5;
+                    for (let i = 0; i < particles.length; i++) {
+                        for (let j = i + 1; j < particles.length; j++) {
+                            const p1 = particles[i];
+                            const p2 = particles[j];
+                            const dx = p1.x - p2.x;
+                            const dy = p1.y - p2.y;
+                            const dist = Math.sqrt(dx * dx + dy * dy);
+                            if (dist < CONNECTION_DIST) {
+                                ctx.strokeStyle = lineColor;
+                                ctx.globalAlpha = (1 - dist / CONNECTION_DIST) * 0.7;
+                                ctx.beginPath();
+                                ctx.moveTo(p1.x, p1.y);
+                                ctx.lineTo(p2.x, p2.y);
+                                ctx.stroke();
+                                ctx.globalAlpha = 1;
+                            }
+                        }
+                    }
+
+                    // Mouse connection lines
+                    if (mouse.x !== null && mouse.y !== null) {
+                        for (const p of particles) {
+                            const dx = p.x - mouse.x;
+                            const dy = p.y - mouse.y;
+                            const dist = Math.sqrt(dx * dx + dy * dy);
+                            if (dist < CONNECTION_DIST) {
+                                ctx.strokeStyle = lineColor;
+                                ctx.globalAlpha = (1 - dist / CONNECTION_DIST) * 0.6;
+                                ctx.beginPath();
+                                ctx.moveTo(p.x, p.y);
+                                ctx.lineTo(mouse.x, mouse.y);
+                                ctx.stroke();
+                                ctx.globalAlpha = 1;
+                            }
+                        }
+                    }
+                }
+
+                function animate() {
+                    drawParticles();
+                    requestAnimationFrame(animate);
+                }
+
+                window.addEventListener('resize', resize);
+                window.addEventListener('mousemove', (e) => {
+                    mouse.x = e.clientX;
+                    mouse.y = e.clientY;
+                });
+                window.addEventListener('mouseleave', () => {
+                    mouse.x = null;
+                    mouse.y = null;
+                });
+                window.addEventListener('touchmove', (e) => {
+                    if (e.touches.length > 0) {
+                        mouse.x = e.touches[0].clientX;
+                        mouse.y = e.touches[0].clientY;
+                    }
+                }, { passive: true });
+                window.addEventListener('touchend', () => {
+                    mouse.x = null;
+                    mouse.y = null;
+                });
+
+                // Observar mudança de tema para atualizar cores
+                const observer = new MutationObserver(() => {
+                    // cores serão atualizadas no próximo frame
+                });
+                observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+
+                resize();
+                animate();
+            })();
         })();
     </script>
 </body>
