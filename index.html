@@ -26,10 +26,6 @@
             --radius: 20px;
             --sidebar-width: 260px;
             --sidebar-collapsed-width: 72px;
-            /* Cores para blobs animados */
-            --blob1: rgba(99, 102, 241, 0.25);
-            --blob2: rgba(16, 185, 129, 0.18);
-            --blob3: rgba(139, 92, 246, 0.20);
         }
         body.dark {
             --bg: #0f172a;
@@ -42,9 +38,6 @@
             --success: #34d399;
             --danger: #f87171;
             --warning: #fbbf24;
-            --blob1: rgba(129, 140, 248, 0.20);
-            --blob2: rgba(52, 211, 153, 0.15);
-            --blob3: rgba(167, 139, 250, 0.18);
         }
         * {
             margin: 0;
@@ -54,16 +47,17 @@
         body {
             font-family: 'Inter', system-ui, sans-serif;
             background: var(--bg);
+            background-image: radial-gradient(ellipse at 50% 0%, var(--accent-light) 0%, transparent 70%);
+            background-size: 100% 400px;
+            background-repeat: no-repeat;
             display: flex;
             min-height: 100vh;
             color: var(--text);
-            transition: background 0.3s, color 0.3s;
+            transition: background 0.2s, color 0.2s;
             position: relative;
-            overflow-x: hidden;
         }
-
-        /* ========== NOVO: FUNDO ANIMADO COM INTERAÇÃO ========== */
-        .bg-blobs {
+        /* Canvas de partículas interativas */
+        #particles-canvas {
             position: fixed;
             top: 0;
             left: 0;
@@ -71,66 +65,7 @@
             height: 100%;
             z-index: 0;
             pointer-events: none;
-            overflow: hidden;
         }
-        .blob {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(90px);
-            opacity: 0.7;
-            animation: blobFloat 18s ease-in-out infinite alternate;
-            will-change: transform;
-        }
-        .blob1 {
-            width: 500px;
-            height: 500px;
-            background: var(--blob1);
-            top: -150px;
-            left: -100px;
-            animation-duration: 22s;
-        }
-        .blob2 {
-            width: 400px;
-            height: 400px;
-            background: var(--blob2);
-            bottom: -120px;
-            right: -80px;
-            animation-duration: 26s;
-            animation-delay: -5s;
-        }
-        .blob3 {
-            width: 350px;
-            height: 350px;
-            background: var(--blob3);
-            top: 40%;
-            left: 60%;
-            animation-duration: 20s;
-            animation-delay: -10s;
-        }
-        @keyframes blobFloat {
-            0% {
-                transform: translate(0, 0) scale(1);
-            }
-            33% {
-                transform: translate(60px, -40px) scale(1.1);
-            }
-            66% {
-                transform: translate(-30px, 50px) scale(0.95);
-            }
-            100% {
-                transform: translate(40px, 20px) scale(1.05);
-            }
-        }
-        #bgCanvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-            pointer-events: none;
-        }
-
         .sidebar {
             width: var(--sidebar-width);
             background: rgba(255, 255, 255, 0.65);
@@ -287,7 +222,7 @@
             padding: 24px 28px;
             transition: margin-left 0.3s ease;
             position: relative;
-            z-index: 2;
+            z-index: 1;
         }
         .sidebar.collapsed~.main-content {
             margin-left: var(--sidebar-collapsed-width);
@@ -812,17 +747,15 @@
                 font-size: 1.3rem;
             }
         }
+        @media print {
+            #particles-canvas {
+                display: none;
+            }
+        }
     </style>
 </head>
 <body>
-    <!-- FUNDO ANIMADO -->
-    <div class="bg-blobs" aria-hidden="true">
-        <div class="blob blob1"></div>
-        <div class="blob blob2"></div>
-        <div class="blob blob3"></div>
-    </div>
-    <canvas id="bgCanvas" aria-hidden="true"></canvas>
-
+    <canvas id="particles-canvas"></canvas>
     <button class="menu-toggle" id="menuToggle" aria-label="Menu">☰</button>
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
@@ -2295,89 +2228,66 @@
             $('refreshDataBtn').onclick = loadData;
             loadData();
 
-            /* ===== NOVO: ANIMAÇÃO DE PARTÍCULAS INTERATIVA ===== */
-            (function initParticleBackground() {
-                const canvas = document.getElementById('bgCanvas');
-                if (!canvas) return;
+            /* ===== INICIALIZAÇÃO DO FUNDO ANIMADO (PARTÍCULAS) ===== */
+            function initParticles() {
+                const canvas = document.getElementById('particles-canvas');
                 const ctx = canvas.getContext('2d');
                 let width, height;
                 let particles = [];
                 const mouse = { x: null, y: null, radius: 150 };
-                const PARTICLE_COUNT = window.innerWidth < 768 ? 50 : 90;
-                const CONNECTION_DIST = 120;
-                const BASE_OPACITY = 0.6;
+                let animId;
 
                 function resize() {
                     width = canvas.width = window.innerWidth;
                     height = canvas.height = window.innerHeight;
-                    initParticles();
-                }
-
-                function getParticleColor() {
-                    const dark = document.body.classList.contains('dark');
-                    if (dark) return 'rgba(129, 140, 248, 0.8)';
-                    return 'rgba(99, 102, 241, 0.7)';
-                }
-
-                function getLineColor() {
-                    const dark = document.body.classList.contains('dark');
-                    if (dark) return 'rgba(129, 140, 248, 0.4)';
-                    return 'rgba(99, 102, 241, 0.35)';
-                }
-
-                function initParticles() {
+                    const count = Math.min(Math.floor(width * height / 15000), 120);
                     particles = [];
-                    for (let i = 0; i < PARTICLE_COUNT; i++) {
+                    for (let i = 0; i < count; i++) {
                         particles.push({
                             x: Math.random() * width,
                             y: Math.random() * height,
-                            vx: (Math.random() - 0.5) * 0.8,
-                            vy: (Math.random() - 0.5) * 0.8,
-                            radius: Math.random() * 2.5 + 1.5,
-                            baseOpacity: Math.random() * 0.4 + 0.2
+                            vx: (Math.random() - 0.5) * 0.5,
+                            vy: (Math.random() - 0.5) * 0.5,
+                            radius: Math.random() * 2 + 1
                         });
                     }
                 }
 
-                function drawParticles() {
-                    ctx.clearRect(0, 0, width, height);
-                    const particleColor = getParticleColor();
-                    const lineColor = getLineColor();
+                function getColors() {
+                    const isDark = document.body.classList.contains('dark');
+                    return {
+                        particle: isDark ? 'rgba(129, 140, 248, 0.6)' : 'rgba(99, 102, 241, 0.5)',
+                        line: isDark ? 'rgba(129, 140, 248, 0.2)' : 'rgba(99, 102, 241, 0.15)',
+                        mouseLine: isDark ? 'rgba(129, 140, 248, 0.3)' : 'rgba(99, 102, 241, 0.25)'
+                    };
+                }
 
+                function draw() {
+                    ctx.clearRect(0, 0, width, height);
+                    const colors = getColors();
+
+                    // Atualiza posições
                     for (const p of particles) {
-                        // Update position
                         p.x += p.vx;
                         p.y += p.vy;
+                        if (p.x < 0 || p.x > width) p.vx *= -1;
+                        if (p.y < 0 || p.y > height) p.vy *= -1;
 
-                        // Wrap around edges
-                        if (p.x < 0) p.x = width;
-                        if (p.x > width) p.x = 0;
-                        if (p.y < 0) p.y = height;
-                        if (p.y > height) p.y = 0;
-
-                        // Mouse repulsion
+                        // Interação com mouse (repulsão)
                         if (mouse.x !== null && mouse.y !== null) {
                             const dx = p.x - mouse.x;
                             const dy = p.y - mouse.y;
                             const dist = Math.sqrt(dx * dx + dy * dy);
-                            if (dist < mouse.radius && dist > 0) {
+                            if (dist < mouse.radius) {
                                 const force = (mouse.radius - dist) / mouse.radius;
-                                p.x += dx / dist * force * 2;
-                                p.y += dy / dist * force * 2;
+                                const angle = Math.atan2(dy, dx);
+                                p.x += Math.cos(angle) * force * 2;
+                                p.y += Math.sin(angle) * force * 2;
                             }
                         }
-
-                        // Draw particle
-                        ctx.beginPath();
-                        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-                        ctx.fillStyle = particleColor;
-                        ctx.globalAlpha = p.baseOpacity * BASE_OPACITY;
-                        ctx.fill();
-                        ctx.globalAlpha = 1;
                     }
 
-                    // Draw connections
-                    ctx.lineWidth = 0.5;
+                    // Desenha linhas entre partículas próximas
                     for (let i = 0; i < particles.length; i++) {
                         for (let j = i + 1; j < particles.length; j++) {
                             const p1 = particles[i];
@@ -2385,71 +2295,63 @@
                             const dx = p1.x - p2.x;
                             const dy = p1.y - p2.y;
                             const dist = Math.sqrt(dx * dx + dy * dy);
-                            if (dist < CONNECTION_DIST) {
-                                ctx.strokeStyle = lineColor;
-                                ctx.globalAlpha = (1 - dist / CONNECTION_DIST) * 0.7;
+                            const maxDist = 120;
+                            if (dist < maxDist) {
                                 ctx.beginPath();
+                                ctx.strokeStyle = colors.line;
+                                ctx.lineWidth = 1 - dist / maxDist;
                                 ctx.moveTo(p1.x, p1.y);
                                 ctx.lineTo(p2.x, p2.y);
                                 ctx.stroke();
-                                ctx.globalAlpha = 1;
                             }
                         }
                     }
 
-                    // Mouse connection lines
+                    // Linhas para o mouse
                     if (mouse.x !== null && mouse.y !== null) {
                         for (const p of particles) {
                             const dx = p.x - mouse.x;
                             const dy = p.y - mouse.y;
                             const dist = Math.sqrt(dx * dx + dy * dy);
-                            if (dist < CONNECTION_DIST) {
-                                ctx.strokeStyle = lineColor;
-                                ctx.globalAlpha = (1 - dist / CONNECTION_DIST) * 0.6;
+                            if (dist < mouse.radius) {
                                 ctx.beginPath();
+                                ctx.strokeStyle = colors.mouseLine;
+                                ctx.lineWidth = 0.8;
                                 ctx.moveTo(p.x, p.y);
                                 ctx.lineTo(mouse.x, mouse.y);
                                 ctx.stroke();
-                                ctx.globalAlpha = 1;
                             }
                         }
                     }
+
+                    // Desenha partículas
+                    for (const p of particles) {
+                        ctx.beginPath();
+                        ctx.fillStyle = colors.particle;
+                        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+
+                    animId = requestAnimationFrame(draw);
                 }
 
-                function animate() {
-                    drawParticles();
-                    requestAnimationFrame(animate);
+                function onMouseMove(e) {
+                    mouse.x = e.clientX;
+                    mouse.y = e.clientY;
+                }
+                function onMouseLeave() {
+                    mouse.x = null;
+                    mouse.y = null;
                 }
 
                 window.addEventListener('resize', resize);
-                window.addEventListener('mousemove', (e) => {
-                    mouse.x = e.clientX;
-                    mouse.y = e.clientY;
-                });
-                window.addEventListener('mouseleave', () => {
-                    mouse.x = null;
-                    mouse.y = null;
-                });
-                window.addEventListener('touchmove', (e) => {
-                    if (e.touches.length > 0) {
-                        mouse.x = e.touches[0].clientX;
-                        mouse.y = e.touches[0].clientY;
-                    }
-                }, { passive: true });
-                window.addEventListener('touchend', () => {
-                    mouse.x = null;
-                    mouse.y = null;
-                });
-
-                // Observar mudança de tema para atualizar cores
-                const observer = new MutationObserver(() => {
-                    // cores serão atualizadas no próximo frame
-                });
-                observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
-
+                window.addEventListener('mousemove', onMouseMove);
+                window.addEventListener('mouseout', onMouseLeave);
                 resize();
-                animate();
-            })();
+                draw();
+            }
+
+            initParticles();
         })();
     </script>
 </body>
