@@ -3,916 +3,403 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BDO - Boletim Diário de Ocorrência | TST Obra Civil</title>
-
-    <!-- Folha de estilos -->
+    <title>Gerador de Certificados NR</title>
+    <!-- html2pdf CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <style>
-        /* ===== VARIÁVEIS E RESET ===== */
-        :root {
-            --cor-primaria: #1a3c5e;
-            --cor-secundaria: #f39c12;
-            --cor-borda: #d4d4d4;
-            --cor-fundo: #f5f7fa;
-            --cor-texto: #2c3e50;
-            --cor-branca: #ffffff;
-            --cor-perigo: #e74c3c;
-            --fonte-doc: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
         }
         body {
-            font-family: var(--fonte-doc);
-            background: var(--cor-fundo);
-            color: var(--cor-texto);
-            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f2f5;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
+            min-height: 100vh;
             padding: 20px;
         }
-
-        /* ===== CONTROLES ===== */
-        .controles-topo {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 25px;
-            width: 100%;
-            max-width: 850px;
-            background: var(--cor-branca);
-            padding: 16px 20px;
+        .container {
+            background: #fff;
             border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-            position: sticky;
-            top: 15px;
-            z-index: 100;
-        }
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 22px;
-            border: none;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            letter-spacing: 0.3px;
-            font-family: var(--fonte-doc);
-        }
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 18px rgba(0,0,0,0.15);
-        }
-        .btn-pdf { background: #e74c3c; color: #fff; }
-        .btn-pdf:hover { background: #c0392b; }
-        .btn-imprimir { background: #2c3e50; color: #fff; }
-        .btn-imprimir:hover { background: #1a252f; }
-        .btn-limpar { background: #ecf0f1; color: #555; border: 1px solid #ccc; }
-        .btn-limpar:hover { background: #dfe4e5; }
-        .btn .icone { font-size: 18px; }
-
-        /* ===== DOCUMENTO ===== */
-        #documento {
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            padding: 30px 40px;
+            max-width: 600px;
             width: 100%;
-            max-width: 850px;
-            background: var(--cor-branca);
-            border-radius: 8px;
-            box-shadow: 0 8px 35px rgba(0,0,0,0.1);
-            padding: 40px 45px 35px;
-            font-family: var(--fonte-doc);
-            position: relative;
-            border-top: 5px solid var(--cor-primaria);
         }
-        .cabecalho-bdo {
+        h1 {
             text-align: center;
-            border-bottom: 3px double var(--cor-primaria);
-            padding-bottom: 18px;
+            color: #1a3c5e;
+            margin-bottom: 25px;
+            font-weight: 600;
+            font-size: 28px;
+            border-bottom: 2px solid #e0e7ef;
+            padding-bottom: 10px;
+        }
+        .form-group {
             margin-bottom: 20px;
         }
-        .titulo-principal {
-            font-size: 22px;
-            font-weight: 800;
-            color: var(--cor-primaria);
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            margin-bottom: 4px;
-        }
-        .subtitulo {
-            font-size: 13px;
-            color: #666;
-            font-weight: 500;
-            letter-spacing: 0.5px;
-        }
-        .empresa-input {
-            font-size: 16px;
-            font-weight: 700;
-            color: var(--cor-secundaria);
-            border: none;
-            border-bottom: 2px dashed #ccc;
-            text-align: center;
-            width: 70%;
-            padding: 4px 8px;
-            margin: 6px 0 2px;
-            background: transparent;
-            outline: none;
-        }
-        .numero-bdo {
-            font-size: 12px;
-            color: #888;
-            margin-top: 3px;
-            font-weight: 500;
-        }
-        .numero-bdo input {
-            font-size: 12px;
-            border: none;
-            border-bottom: 1px solid #ddd;
-            text-align: center;
-            width: 180px;
-            background: transparent;
-            color: #888;
-            outline: none;
-            font-weight: 600;
-        }
-
-        .secao {
-            margin-bottom: 18px;
-            border: 1px solid var(--cor-borda);
-            border-radius: 6px;
-            overflow: hidden;
-        }
-        .secao-titulo {
-            background: var(--cor-primaria);
-            color: #fff;
-            font-size: 12px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            padding: 7px 14px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .secao-corpo {
-            padding: 14px 18px;
-            background: #fefefe;
-        }
-        .grade-info {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 12px;
-        }
-        .campo {
-            display: flex;
-            flex-direction: column;
-            gap: 3px;
-        }
-        .campo label {
-            font-size: 10px;
-            font-weight: 700;
-            text-transform: uppercase;
-            color: #777;
-            letter-spacing: 0.5px;
-        }
-        .campo input,
-        .campo select,
-        .campo textarea {
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            padding: 8px 10px;
-            font-size: 13px;
-            font-family: var(--fonte-doc);
-            background: #fafbfc;
-            transition: all 0.3s;
-            outline: none;
-            width: 100%;
-            color: var(--cor-texto);
-        }
-        .campo input:focus,
-        .campo select:focus,
-        .campo textarea:focus {
-            border-color: var(--cor-secundaria);
-            background: #fff;
-            box-shadow: 0 0 0 3px rgba(243,156,18,0.12);
-        }
-        .campo textarea {
-            min-height: 70px;
-            resize: vertical;
-            line-height: 1.5;
-        }
-        .campo-full { grid-column: 1 / -1; }
-
-        /* ===== FOTOS ===== */
-        .btn-upload-foto {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: #f0f4f8;
-            border: 2px dashed #b0c4d9;
-            border-radius: 8px;
-            padding: 14px 20px;
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--cor-primaria);
-            transition: all 0.3s;
-        }
-        .btn-upload-foto:hover {
-            border-color: var(--cor-secundaria);
-            background: #fff8f0;
-        }
-        .grade-fotos {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 10px;
-            width: 100%;
-        }
-        .foto-item {
-            position: relative;
-            width: 130px;
-            height: 130px;
-            border-radius: 8px;
-            overflow: hidden;
-            border: 2px solid #ddd;
-            background: #f9f9f9;
-            transition: all 0.3s;
-        }
-        .foto-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+        label {
             display: block;
-        }
-        .foto-item .remover-foto {
-            position: absolute;
-            top: 4px;
-            right: 4px;
-            background: rgba(231,76,60,0.9);
-            color: #fff;
-            border: none;
-            border-radius: 50%;
-            width: 24px;
-            height: 24px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 6px;
             font-size: 14px;
-            font-weight: 700;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            line-height: 1;
-            transition: all 0.2s;
-            padding: 0;
         }
-        .foto-item .remover-foto:hover {
-            background: #c0392b;
-            transform: scale(1.15);
-        }
-        .foto-item .legenda-foto {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: rgba(0,0,0,0.65);
-            color: #fff;
-            font-size: 9px;
-            padding: 3px 6px;
-            text-align: center;
-            font-weight: 500;
-        }
-
-        /* ===== ASSINATURAS ===== */
-        .grade-assinaturas {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 18px;
-            margin-top: 5px;
-        }
-        .assinatura-bloco {
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 5px;
-        }
-        .assinatura-canvas-container {
-            position: relative;
+        select, input {
             width: 100%;
-            max-width: 220px;
-            height: 90px;
-            border: 2px dashed #b0c4d9;
-            border-radius: 6px;
-            background: #fdfdfd;
-            cursor: crosshair;
-            overflow: hidden;
-            transition: border-color 0.3s;
+            padding: 12px 15px;
+            border: 1px solid #ccd7e4;
+            border-radius: 8px;
+            font-size: 16px;
+            background: #fafbfc;
+            transition: border 0.2s;
         }
-        .assinatura-canvas-container canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
+        select:focus, input:focus {
+            border-color: #1a73e8;
+            outline: none;
+            background: #fff;
+        }
+        .btn {
             width: 100%;
-            height: 100%;
-            display: block;
-            z-index: 1;
-            background: transparent;
-        }
-        .placeholder-assinatura {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 10px;
-            color: #aaa;
-            pointer-events: none;
-            font-weight: 500;
-            text-align: center;
-            line-height: 1.3;
-            z-index: 0;
-        }
-        .btn-limpar-assinatura {
-            background: #f0f0f0;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 10px;
-            padding: 3px 10px;
-            cursor: pointer;
-            color: #666;
-            transition: all 0.2s;
-            font-family: var(--fonte-doc);
+            padding: 14px;
+            background: #1a73e8;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
             font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 10px;
         }
-        .assinatura-cargo {
-            font-size: 11px;
-            font-weight: 700;
-            color: var(--cor-primaria);
+        .btn:hover {
+            background: #1557b0;
+        }
+        .btn:active {
+            transform: scale(0.98);
+        }
+        .info {
+            font-size: 13px;
+            color: #5e6f8d;
+            margin-top: 15px;
+            text-align: center;
+        }
+        /* Estilos do certificado (oculto) */
+        #certificateWrapper {
+            display: none;
+        }
+        .cert-page {
+            width: 210mm;
+            min-height: 297mm;
+            padding: 20mm 15mm;
+            margin: 0 auto;
+            background: white;
+            font-family: 'Times New Roman', Times, serif;
+            color: #1a1a1a;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            position: relative;
+            page-break-after: always;
+        }
+        .cert-page:last-child {
+            page-break-after: avoid;
+        }
+        .cert-header {
+            text-align: center;
+            font-size: 22px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            border-bottom: 2px solid #222;
+            padding-bottom: 12px;
+            margin-bottom: 25px;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
-        .assinatura-nome {
-            font-size: 12px;
-            color: #555;
+        .cert-body {
+            font-size: 18px;
+            line-height: 1.6;
+            text-align: justify;
+            margin-top: 20px;
         }
-        .assinatura-nome input {
-            font-size: 12px;
-            border: none;
-            border-bottom: 1px solid #ddd;
+        .cert-body .highlight {
+            font-weight: bold;
+        }
+        .cert-body .data {
+            text-align: right;
+            font-weight: normal;
+            margin-top: 30px;
+        }
+        .cert-footer {
+            margin-top: 40px;
+            border-top: 1px solid #aaa;
+            padding-top: 20px;
+            font-size: 16px;
             text-align: center;
-            width: 100%;
-            max-width: 180px;
-            padding: 3px 5px;
-            background: transparent;
-            outline: none;
-            color: #555;
-            font-weight: 500;
         }
-        .assinatura-registro {
-            font-size: 10px;
-            color: #999;
+        .cert-footer .instrutor {
+            font-weight: bold;
         }
-        .assinatura-registro input {
-            font-size: 10px;
-            border: none;
-            border-bottom: 1px solid #eee;
+        .cert-footer .registro {
+            font-size: 14px;
+        }
+        .conteudo-titulo {
+            font-size: 20px;
+            font-weight: bold;
             text-align: center;
-            width: 100%;
-            max-width: 140px;
-            padding: 2px 4px;
-            background: transparent;
-            outline: none;
-            color: #999;
+            margin-bottom: 20px;
+            text-decoration: underline;
         }
-
-        .rodape-documento {
-            margin-top: 25px;
-            padding-top: 12px;
-            border-top: 1px solid #e0e0e0;
-            text-align: center;
-            font-size: 10px;
-            color: #999;
-            letter-spacing: 0.3px;
+        .conteudo-lista {
+            font-size: 16px;
+            line-height: 1.8;
+            padding-left: 10px;
         }
-
-        /* ===== RESPONSIVO ===== */
-        @media (max-width: 768px) {
-            #documento { padding: 20px 15px; }
-            .grade-info { grid-template-columns: 1fr 1fr; }
-            .campo-full { grid-column: 1 / -1; }
-            .grade-assinaturas { grid-template-columns: 1fr; }
-            .foto-item { width: 100px; height: 100px; }
+        .conteudo-lista ol {
+            list-style-type: decimal;
+            padding-left: 25px;
         }
-        @media (max-width: 480px) {
-            .grade-info { grid-template-columns: 1fr; }
+        .conteudo-lista li {
+            margin-bottom: 6px;
         }
-
-        /* ===== IMPRESSÃO ===== */
+        /* Ajustes para impressão */
         @media print {
-            body { background: #fff; padding: 0; }
-            .controles-topo, .btn-upload-foto, .btn-limpar-assinatura, .remover-foto { display: none !important; }
-            #documento { box-shadow: none; border-radius: 0; border-top: 3px solid #1a3c5e; max-width: 100%; padding: 20px; }
-            .secao { page-break-inside: avoid; }
+            body { background: white; }
+            .container { display: none; }
+            #certificateWrapper { display: block !important; }
+            .cert-page { border: none; }
         }
     </style>
 </head>
 <body>
-
-    <!-- Barra de Controle -->
-    <div class="controles-topo">
-        <button class="btn btn-pdf" onclick="gerarPDF()" title="Gerar documento PDF">
-            <span class="icone">📄</span> Gerar PDF
-        </button>
-        <button class="btn btn-imprimir" onclick="window.print()" title="Imprimir documento">
-            <span class="icone">🖨️</span> Imprimir
-        </button>
-        <button class="btn btn-limpar" onclick="limparTudo()" title="Limpar todos os campos">
-            <span class="icone">🗑️</span> Limpar Tudo
-        </button>
-        <span style="font-size:12px; color:#888; font-weight:500; margin-left:auto;">
-            📋 Preencha os campos e gere o PDF
-        </span>
-    </div>
-
-    <!-- Documento BDO -->
-    <div id="documento">
-        <div class="cabecalho-bdo">
-            <div class="titulo-principal">📋 Boletim Diário de Ocorrência</div>
-            <div class="subtitulo">BDO — Segurança do Trabalho | Obra Civil</div>
-            <input type="text" class="empresa-input" id="empresa" placeholder="Nome da Empresa / Construtora">
-            <div class="numero-bdo">
-                Nº BDO: <input type="text" id="numeroBdo" placeholder="Auto-gerado">
+    <div class="container">
+        <h1>📄 Gerador de Certificados NR</h1>
+        <form id="certForm">
+            <div class="form-group">
+                <label for="nrSelect">Selecione a Norma Regulamentadora</label>
+                <select id="nrSelect" required>
+                    <option value="">-- Escolha --</option>
+                    <option value="nr06">NR-06 (EPI)</option>
+                    <option value="nr12">NR-12 (Máquinas Rotativas)</option>
+                    <option value="nr18">NR-18 (Segurança do Trabalho)</option>
+                    <option value="nr35">NR-35 (Trabalho em Altura)</option>
+                </select>
             </div>
-        </div>
-
-        <!-- Informações Gerais -->
-        <div class="secao">
-            <div class="secao-titulo"><span>📌</span> Informações Gerais</div>
-            <div class="secao-corpo">
-                <div class="grade-info">
-                    <div class="campo">
-                        <label>📅 Data</label>
-                        <input type="date" id="data" required>
-                    </div>
-                    <div class="campo">
-                        <label>🏗️ Obra / Projeto</label>
-                        <input type="text" id="obra" placeholder="Ex: Edifício Residencial Horizonte" required>
-                    </div>
-                    <div class="campo">
-                        <label>📍 Local</label>
-                        <input type="text" id="local" placeholder="Ex: Av. Principal, 123 — Centro">
-                    </div>
-                    <div class="campo">
-                        <label>👷 TST Responsável</label>
-                        <input type="text" id="tst" placeholder="Nome do Técnico de Segurança" required>
-                    </div>
-                    <div class="campo">
-                        <label>🌤️ Condições Climáticas</label>
-                        <select id="clima">
-                            <option>Ensolarado</option>
-                            <option>Parcialmente Nublado</option>
-                            <option>Nublado</option>
-                            <option>Chuvoso</option>
-                            <option>Tempestade</option>
-                            <option>Ventoso</option>
-                            <option>Nevoeiro</option>
-                        </select>
-                    </div>
-                    <div class="campo">
-                        <label>👥 Nº de Trabalhadores</label>
-                        <input type="number" id="numTrabalhadores" min="1" placeholder="Ex: 25">
-                    </div>
-                </div>
+            <div class="form-group">
+                <label for="nome">Nome Completo</label>
+                <input type="text" id="nome" placeholder="Ex: Matheus Corteze" required>
             </div>
-        </div>
-
-        <!-- Atividades -->
-        <div class="secao">
-            <div class="secao-titulo"><span>🔨</span> Atividades Realizadas</div>
-            <div class="secao-corpo">
-                <div class="campo campo-full">
-                    <textarea id="atividades" placeholder="Descreva as principais atividades executadas no canteiro de obras..."></textarea>
-                </div>
+            <div class="form-group">
+                <label for="cpf">CPF (apenas números)</label>
+                <input type="text" id="cpf" placeholder="12635126909" required>
             </div>
-        </div>
-
-        <!-- Ocorrências -->
-        <div class="secao">
-            <div class="secao-titulo"><span>⚠️</span> Ocorrências / Incidentes</div>
-            <div class="secao-corpo">
-                <div class="grade-info">
-                    <div class="campo">
-                        <label>📋 Tipo de Ocorrência</label>
-                        <select id="tipoOcorrencia">
-                            <option>Nenhuma Ocorrência</option>
-                            <option>Incidente</option>
-                            <option>Acidente sem Afastamento</option>
-                            <option>Acidente com Afastamento</option>
-                            <option>Desvio de Comportamento</option>
-                            <option>Condição Insegura</option>
-                            <option>Quase Acidente</option>
-                            <option>Outro</option>
-                        </select>
-                    </div>
-                    <div class="campo campo-full">
-                        <label>📝 Descrição da Ocorrência</label>
-                        <textarea id="descOcorrencia" placeholder="Descreva detalhadamente o que ocorreu..."></textarea>
-                    </div>
-                </div>
+            <div class="form-group">
+                <label for="data">Data do Certificado</label>
+                <input type="date" id="data" required>
             </div>
-        </div>
-
-        <!-- Segurança / EPIs -->
-        <div class="secao">
-            <div class="secao-titulo"><span>🦺</span> Segurança & EPIs</div>
-            <div class="secao-corpo">
-                <div class="grade-info">
-                    <div class="campo">
-                        <label>✅ EPIs Utilizados</label>
-                        <input type="text" id="epis" placeholder="Ex: Capacetes, botas, luvas, cintos">
-                    </div>
-                    <div class="campo">
-                        <label>🏗️ Equipamentos</label>
-                        <input type="text" id="equipamentos" placeholder="Ex: Betoneira, grua, andaimes">
-                    </div>
-                    <div class="campo campo-full">
-                        <label>📋 Observações de Segurança</label>
-                        <textarea id="obsSeguranca" placeholder="Observações sobre segurança, DDS, inspeções..."></textarea>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Fotos -->
-        <div class="secao">
-            <div class="secao-titulo"><span>📸</span> Registro Fotográfico</div>
-            <div class="secao-corpo">
-                <button class="btn-upload-foto" onclick="document.getElementById('inputFotos').click()">
-                    ➕ Adicionar Fotos
-                </button>
-                <input type="file" id="inputFotos" accept="image/*" multiple style="display:none" onchange="adicionarFotos(event)">
-                <div class="grade-fotos" id="gradeFotos"></div>
-            </div>
-        </div>
-
-        <!-- Assinaturas -->
-        <div class="secao">
-            <div class="secao-titulo"><span>✍️</span> Assinaturas</div>
-            <div class="secao-corpo">
-                <div class="grade-assinaturas">
-                    <!-- TST -->
-                    <div class="assinatura-bloco">
-                        <div class="assinatura-cargo">TST — Técnico de Segurança</div>
-                        <div class="assinatura-canvas-container" id="containerAssinaturaTst">
-                            <span class="placeholder-assinatura">Assine aqui</span>
-                            <canvas id="canvasAssinaturaTst"></canvas>
-                        </div>
-                        <button class="btn-limpar-assinatura" onclick="limparAssinatura('canvasAssinaturaTst')">Limpar</button>
-                        <div class="assinatura-nome"><input type="text" id="nomeTst" placeholder="Nome do TST"></div>
-                        <div class="assinatura-registro"><input type="text" id="registroTst" placeholder="Registro / CREA"></div>
-                    </div>
-                    <!-- Engenheiro -->
-                    <div class="assinatura-bloco">
-                        <div class="assinatura-cargo">Engenheiro Responsável</div>
-                        <div class="assinatura-canvas-container" id="containerAssinaturaEng">
-                            <span class="placeholder-assinatura">Assine aqui</span>
-                            <canvas id="canvasAssinaturaEng"></canvas>
-                        </div>
-                        <button class="btn-limpar-assinatura" onclick="limparAssinatura('canvasAssinaturaEng')">Limpar</button>
-                        <div class="assinatura-nome"><input type="text" id="nomeEng" placeholder="Nome do Engenheiro"></div>
-                        <div class="assinatura-registro"><input type="text" id="registroEng" placeholder="Registro / CREA"></div>
-                    </div>
-                    <!-- Mestre de Obras -->
-                    <div class="assinatura-bloco">
-                        <div class="assinatura-cargo">Mestre de Obras</div>
-                        <div class="assinatura-canvas-container" id="containerAssinaturaMestre">
-                            <span class="placeholder-assinatura">Assine aqui</span>
-                            <canvas id="canvasAssinaturaMestre"></canvas>
-                        </div>
-                        <button class="btn-limpar-assinatura" onclick="limparAssinatura('canvasAssinaturaMestre')">Limpar</button>
-                        <div class="assinatura-nome"><input type="text" id="nomeMestre" placeholder="Nome do Mestre"></div>
-                        <div class="assinatura-registro"><input type="text" id="registroMestre" placeholder="Registro / Identificação"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="rodape-documento">
-            📄 Documento parte integrante do registro de segurança. | Gerado em <span id="dataGeracao"></span>
+            <button type="submit" class="btn">Gerar PDF</button>
+        </form>
+        <div class="info">
+            O PDF será gerado com duas páginas: certificado e conteúdo programático.
         </div>
     </div>
 
-    <!-- Bibliotecas externas (carregadas via CDN) -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- Estrutura do certificado (oculta) -->
+    <div id="certificateWrapper">
+        <!-- Página 1: Certificado -->
+        <div class="cert-page" id="page1">
+            <div class="cert-header">CLUB RESIDENCE GRAND SOLARIS CERTIFICADO</div>
+            <div class="cert-body">
+                <p>
+                    Certificamos para os devidos fins que o Sr. <span class="highlight" id="certNome">NOME</span>,
+                    inscrito no CPF: <span class="highlight" id="certCpf">CPF</span>,
+                    <span id="certTexto">TEXTO</span>
+                </p>
+                <p class="data" id="certData">Foz do Iguaçu, DATA</p>
+            </div>
+            <div class="cert-footer">
+                <div class="instrutor">Instrutor e Resp. Técnico pelo Treinamento<br>
+                Agnaldo Fernando de Lima Junior</div>
+                <div class="registro">Técnico em Segurança do Trabalho<br>Reg. 0073883/SP - MTE</div>
+            </div>
+        </div>
+        <!-- Página 2: Conteúdo Programático -->
+        <div class="cert-page" id="page2">
+            <div class="conteudo-titulo">CONTEÚDO PROGRAMÁTICO</div>
+            <div class="conteudo-lista" id="conteudoLista">
+                <!-- Inserido via JS -->
+            </div>
+        </div>
+    </div>
 
     <script>
-        // ===================== INICIALIZAÇÃO =====================
-        document.addEventListener('DOMContentLoaded', function() {
-            const hoje = new Date();
-            const dataISO = hoje.toISOString().split('T')[0];
-            document.getElementById('data').value = dataISO;
-
-            const dataFormatada = hoje.toISOString().slice(0, 10).replace(/-/g, '');
-            const numAleatorio = String(Math.floor(Math.random() * 999) + 1).padStart(3, '0');
-            document.getElementById('numeroBdo').value = `BDO-${dataFormatada}-${numAleatorio}`;
-
-            document.getElementById('dataGeracao').textContent =
-                hoje.toLocaleDateString('pt-BR') + ' às ' + hoje.toLocaleTimeString('pt-BR');
-
-            inicializarAssinatura('canvasAssinaturaTst');
-            inicializarAssinatura('canvasAssinaturaEng');
-            inicializarAssinatura('canvasAssinaturaMestre');
-        });
-
-        // ===================== ASSINATURAS =====================
-        const assinaturas = {};
-
-        function inicializarAssinatura(canvasId) {
-            const canvas = document.getElementById(canvasId);
-            const container = canvas.parentElement;
-            const placeholder = container.querySelector('.placeholder-assinatura');
-
-            function redimensionarCanvas() {
-                const rect = container.getBoundingClientRect();
-                const dpr = window.devicePixelRatio || 1;
-                canvas.width = rect.width * dpr;
-                canvas.height = rect.height * dpr;
-                canvas.style.width = rect.width + 'px';
-                canvas.style.height = rect.height + 'px';
-                const ctx = canvas.getContext('2d');
-                ctx.scale(dpr, dpr);
-                ctx.lineWidth = 2.5;
-                ctx.lineCap = 'round';
-                ctx.lineJoin = 'round';
-                ctx.strokeStyle = '#1a3c5e';
-                // Se houver dados salvos, restaurar
-                const dadosSalvos = canvas.dataset.assinatura;
-                if (dadosSalvos) {
-                    const img = new Image();
-                    img.onload = function() {
-                        ctx.clearRect(0, 0, rect.width, rect.height);
-                        ctx.drawImage(img, 0, 0, rect.width, rect.height);
-                    };
-                    img.src = dadosSalvos;
-                }
-            }
-
-            setTimeout(redimensionarCanvas, 100);
-            window.addEventListener('resize', redimensionarCanvas);
-
-            let desenhando = false;
-            let ultimoX = 0, ultimoY = 0;
-
-            function obterPosicao(e) {
-                const rect = canvas.getBoundingClientRect();
-                let clientX, clientY;
-                if (e.touches && e.touches.length > 0) {
-                    clientX = e.touches[0].clientX;
-                    clientY = e.touches[0].clientY;
-                } else {
-                    clientX = e.clientX;
-                    clientY = e.clientY;
-                }
-                return { x: clientX - rect.left, y: clientY - rect.top };
-            }
-
-            function iniciarDesenho(e) {
-                e.preventDefault();
-                desenhando = true;
-                const pos = obterPosicao(e);
-                ultimoX = pos.x;
-                ultimoY = pos.y;
-                if (placeholder) placeholder.style.display = 'none';
-            }
-
-            function desenhar(e) {
-                if (!desenhando) return;
-                e.preventDefault();
-                const pos = obterPosicao(e);
-                const ctx = canvas.getContext('2d');
-                const rect = canvas.getBoundingClientRect();
-                const dpr = window.devicePixelRatio || 1;
-                const escalaX = (canvas.width / dpr) / rect.width;
-                const escalaY = (canvas.height / dpr) / rect.height;
-
-                ctx.beginPath();
-                ctx.moveTo(ultimoX * escalaX, ultimoY * escalaY);
-                ctx.lineTo(pos.x * escalaX, pos.y * escalaY);
-                ctx.stroke();
-
-                ultimoX = pos.x;
-                ultimoY = pos.y;
-            }
-
-            function finalizarDesenho() {
-                if (!desenhando) return;
-                desenhando = false;
-                canvas.dataset.assinatura = canvas.toDataURL('image/png');
-            }
-
-            canvas.addEventListener('mousedown', iniciarDesenho);
-            canvas.addEventListener('mousemove', desenhar);
-            canvas.addEventListener('mouseup', finalizarDesenho);
-            canvas.addEventListener('mouseleave', finalizarDesenho);
-            canvas.addEventListener('touchstart', iniciarDesenho, { passive: false });
-            canvas.addEventListener('touchmove', desenhar, { passive: false });
-            canvas.addEventListener('touchend', finalizarDesenho);
-            canvas.addEventListener('touchcancel', finalizarDesenho);
-
-            assinaturas[canvasId] = {
-                canvas,
-                placeholder,
-                limpar: function() {
-                    const ctx = canvas.getContext('2d');
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    canvas.dataset.assinatura = '';
-                    if (placeholder) placeholder.style.display = 'block';
+        (function() {
+            // Dados dos certificados
+            const nrData = {
+                nr06: {
+                    titulo: 'Treinamento e Uso, Conservação e Higienização de EPI’S',
+                    carga: '02',
+                    textoBase: 'concluiu com êxito, o Treinamento e Uso, Conservação e Higienização de EPI’S, ministrado por Profissional Habilitado em Segurança do Trabalho, com carga horaria de 02 horas, recebendo o presente Certificado para que surtam os efeitos legais.',
+                    conteudo: [
+                        'Definições da Norma Regulamentadora N°06',
+                        'Conceitos de EPI\'s',
+                        'Tipos de EPI\'s',
+                        'Orientação e Treinamento quanto ao uso adequado',
+                        'Guarda e conservação dos Equipamentos de Proteção Individual'
+                    ]
                 },
-                redimensionar: redimensionarCanvas
+                nr12: {
+                    titulo: 'Segurança na Operação de Máquinas Rotativas',
+                    carga: '02',
+                    textoBase: 'participou do treinamento de “Segurança na Operação de Máquinas Rotativas”, com carga horaria de 02 horas, recebendo o presente Certificado para que surtam os efeitos legais.',
+                    conteudo: [
+                        'Tipos de EPI\'S (Equipamento de Proteção Individual) e EPC (Equipamento de Proteção Coletiva)',
+                        'Riscos de Acidente no Trabalho com Máquinas Rotativas (Mecânicos, Elétricos, entre outros) e Proteções Específicas de cada máquina',
+                        'Manutenção de Máquinas Somente Profissional Habilitado',
+                        'Dispositivos de Proteção de Máquinas',
+                        'Orientação Quanto ao não uso de Roupas Largas e Adornos nos Trabalhos com Máquinas Rotativas',
+                        'Segurança na Operação de Máquinas como (Makita, Esmerilhadeira, Perfuratriz, Furadeira de Impacto, Lixadeira, Rompedor, Compactador, Vibrador)',
+                        'Permissão de Trabalho',
+                        'Sistema de Bloqueio (Desenergização) de Operação de Inspeção, Limpeza, Lubrificação e Manutenção'
+                    ]
+                },
+                nr18: {
+                    titulo: 'treinamento inicial de segurança do trabalho da NR18',
+                    carga: '04',
+                    textoBase: 'concluiu com êxito, o treinamento inicial de segurança do trabalho da NR18; ministrado por Profissional Habilitado em Segurança do Trabalho, com carga horaria de 04 horas, recebendo o presente Certificado para que surtam os efeitos legais.',
+                    conteudo: [
+                        'PGR (programa de gerenciamento de risco)',
+                        'Normas e condutas dentro do canteiro de obra',
+                        'Acidentes de Trabalho suas causas e prevenção',
+                        'Efeitos dos Acidentes de Trabalho',
+                        'Fatores e condições inseguras e atos inseguros',
+                        'Método de trabalho seguro e permissão de trabalho',
+                        'Informações sobre as condições e meio ambiente de trabalho',
+                        'Noções de legislação de segurança e saúde do trabalho NR – 18',
+                        'Uso adequado dos equipamentos de proteção individual – EPI',
+                        'Riscos inerentes as atividades que serão desenvolvidas',
+                        'Informações sobre equipamento de proteção coletiva – EPC',
+                        'Orientações sobre Ordens de Serviços',
+                        'Noções básicas de primeiros socorros e situações de emergência',
+                        'Sinalização de Segurança'
+                    ]
+                },
+                nr35: {
+                    titulo: 'Trabalho em Altura',
+                    carga: '08',
+                    textoBase: 'participou do curso de Trabalho em Altura, ministrado por Profissional Habilitado em Segurança do Trabalho, com carga horaria de 08 horas, conforme exigência da NR-35, recebendo o presente Certificado para que surtam os efeitos legais.',
+                    conteudo: [
+                        'Norma e Regulamentos Aplicáveis ao Trabalho em Altura',
+                        'Análise de Risco e Condições Impeditivas',
+                        'Riscos Potenciais Inerentes ao Trabalho em Altura',
+                        'Medidas de Prevenção e Controle',
+                        'Sistema, Equipamentos e Procedimentos de Proteção Coletiva',
+                        'EPI para Altura: Seleção, Inspeção, Conservação e Limitação de Uso',
+                        'Acidentes Típicos em Trabalho em Altura',
+                        'Condutas em situações de emergências',
+                        'Noções de técnicas de resgate e de primeiros socorros',
+                        'Confecções de nós utilizados na técnica',
+                        'Ancoragem pessoal',
+                        'Ascensão com talabarte duplo (Y) e deslocamentos horizontais',
+                        'Montagem e desmontagem de linha de vida horizontal e vertical',
+                        'Ascensão com travas quedas'
+                    ]
+                }
             };
-        }
 
-        function limparAssinatura(canvasId) {
-            if (assinaturas[canvasId]) {
-                assinaturas[canvasId].limpar();
-            } else {
-                const canvas = document.getElementById(canvasId);
-                const ctx = canvas.getContext('2d');
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                canvas.dataset.assinatura = '';
-                const container = canvas.parentElement;
-                const placeholder = container.querySelector('.placeholder-assinatura');
-                if (placeholder) placeholder.style.display = 'block';
-            }
-        }
+            const form = document.getElementById('certForm');
+            const nrSelect = document.getElementById('nrSelect');
+            const nomeInput = document.getElementById('nome');
+            const cpfInput = document.getElementById('cpf');
+            const dataInput = document.getElementById('data');
 
-        // ===================== FOTOS =====================
-        const fotosAdicionadas = [];
-        let contadorFotos = 0;
+            // Preenche data atual
+            const hoje = new Date();
+            const ano = hoje.getFullYear();
+            const mes = String(hoje.getMonth() + 1).padStart(2, '0');
+            const dia = String(hoje.getDate()).padStart(2, '0');
+            dataInput.value = `${ano}-${mes}-${dia}`;
 
-        function adicionarFotos(event) {
-            const arquivos = event.target.files;
-            if (!arquivos || arquivos.length === 0) return;
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
 
-            for (const arquivo of arquivos) {
-                if (!arquivo.type.startsWith('image/')) continue;
-                const leitor = new FileReader();
-                leitor.onload = function(e) {
-                    contadorFotos++;
-                    const fotoData = {
-                        id: `foto_${Date.now()}_${contadorFotos}`,
-                        dataUrl: e.target.result,
-                        legenda: `Foto ${contadorFotos}`
-                    };
-                    fotosAdicionadas.push(fotoData);
-                    renderizarFoto(fotoData);
-                };
-                leitor.readAsDataURL(arquivo);
-            }
-            event.target.value = '';
-        }
-
-        function renderizarFoto(fotoData) {
-            const grade = document.getElementById('gradeFotos');
-            const divFoto = document.createElement('div');
-            divFoto.className = 'foto-item';
-            divFoto.id = fotoData.id;
-            divFoto.innerHTML = `
-                <img src="${fotoData.dataUrl}" alt="${fotoData.legenda}">
-                <button class="remover-foto" onclick="removerFoto('${fotoData.id}')">✕</button>
-                <div class="legenda-foto">${fotoData.legenda}</div>
-            `;
-            grade.appendChild(divFoto);
-        }
-
-        function removerFoto(fotoId) {
-            const elemento = document.getElementById(fotoId);
-            if (elemento) elemento.remove();
-            const indice = fotosAdicionadas.findIndex(f => f.id === fotoId);
-            if (indice > -1) fotosAdicionadas.splice(indice, 1);
-        }
-
-        // ===================== GERAR PDF =====================
-        async function gerarPDF() {
-            // Verificar se as bibliotecas estão carregadas
-            if (typeof html2canvas === 'undefined' || typeof jspdf === 'undefined') {
-                alert('⚠️ Bibliotecas PDF não carregadas. Verifique sua conexão e recarregue a página.');
-                return;
-            }
-
-            // Validação
-            const data = document.getElementById('data').value;
-            const obra = document.getElementById('obra').value.trim();
-            const tst = document.getElementById('tst').value.trim();
-            if (!data) { alert('⚠️ Informe a data.'); return; }
-            if (!obra) { alert('⚠️ Informe a obra/projeto.'); return; }
-            if (!tst) { alert('⚠️ Informe o TST responsável.'); return; }
-
-            const btnPdf = document.querySelector('.btn-pdf');
-            const textoOriginal = btnPdf.innerHTML;
-            btnPdf.innerHTML = '<span class="icone">⏳</span> Gerando...';
-            btnPdf.disabled = true;
-
-            try {
-                // Ocultar elementos .no-pdf (botões, etc)
-                const elementosNoPdf = document.querySelectorAll('.btn-upload-foto, .btn-limpar-assinatura, .remover-foto, .controles-topo');
-                elementosNoPdf.forEach(el => el.style.display = 'none');
-
-                // Pequena pausa para atualizar layout
-                await new Promise(resolve => setTimeout(resolve, 300));
-
-                // Capturar o documento
-                const elementoDocumento = document.getElementById('documento');
-                const canvas = await html2canvas(elementoDocumento, {
-                    scale: 2,
-                    useCORS: true,
-                    backgroundColor: '#ffffff',
-                    logging: false,
-                    allowTaint: true,
-                    foreignObjectRendering: false
-                });
-
-                // Restaurar elementos ocultos
-                elementosNoPdf.forEach(el => el.style.display = '');
-
-                // Criar PDF
-                const { jsPDF } = jspdf;
-                const pdf = new jsPDF('p', 'mm', 'a4');
-                const larguraPagina = 210;
-                const alturaPagina = 297;
-                const margem = 0;
-                const larguraImagemMM = larguraPagina - (margem * 2);
-                const alturaImagemMM = (canvas.height * larguraImagemMM) / canvas.width;
-
-                if (alturaImagemMM <= alturaPagina) {
-                    pdf.addImage(canvas.toDataURL('image/jpeg', 0.95), 'JPEG', margem, margem, larguraImagemMM, alturaImagemMM);
-                } else {
-                    const totalPaginas = Math.ceil(alturaImagemMM / alturaPagina);
-                    for (let i = 0; i < totalPaginas; i++) {
-                        if (i > 0) pdf.addPage();
-                        const srcY = (i * alturaPagina * canvas.width) / larguraImagemMM;
-                        const alturaSlicePx = Math.min(
-                            (alturaPagina * canvas.width) / larguraImagemMM,
-                            canvas.height - srcY
-                        );
-                        const sliceCanvas = document.createElement('canvas');
-                        sliceCanvas.width = canvas.width;
-                        sliceCanvas.height = Math.ceil(alturaSlicePx);
-                        const ctx = sliceCanvas.getContext('2d');
-                        ctx.fillStyle = '#ffffff';
-                        ctx.fillRect(0, 0, sliceCanvas.width, sliceCanvas.height);
-                        ctx.drawImage(
-                            canvas,
-                            0, srcY, canvas.width, alturaSlicePx,
-                            0, 0, canvas.width, alturaSlicePx
-                        );
-                        const alturaSliceMM = (alturaSlicePx * larguraImagemMM) / canvas.width;
-                        pdf.addImage(sliceCanvas.toDataURL('image/jpeg', 0.95), 'JPEG', margem, margem, larguraImagemMM, alturaSliceMM);
-                    }
+                // Validações básicas
+                const nr = nrSelect.value;
+                if (!nr) {
+                    alert('Por favor, selecione uma NR.');
+                    return;
+                }
+                const nome = nomeInput.value.trim();
+                if (!nome) {
+                    alert('Por favor, preencha o nome.');
+                    return;
+                }
+                const cpf = cpfInput.value.replace(/\D/g, '');
+                if (cpf.length !== 11) {
+                    alert('CPF deve conter 11 dígitos (apenas números).');
+                    return;
+                }
+                const dataRaw = dataInput.value;
+                if (!dataRaw) {
+                    alert('Por favor, selecione a data.');
+                    return;
                 }
 
-                const numeroBdo = document.getElementById('numeroBdo').value.trim() || 'BDO';
-                pdf.save(`${numeroBdo.replace(/[^\w\-]/g, '_')}.pdf`);
+                // Formata data para exibição
+                const partes = dataRaw.split('-');
+                const meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+                const mesExtenso = meses[parseInt(partes[1]) - 1];
+                const dataFormatada = `${partes[2]} de ${mesExtenso} de ${partes[0]}`;
 
-            } catch (erro) {
-                console.error('Erro ao gerar PDF:', erro);
-                alert('❌ Falha ao gerar PDF: ' + erro.message);
-            } finally {
-                btnPdf.innerHTML = textoOriginal;
-                btnPdf.disabled = false;
-                // Garantir que elementos voltem
-                document.querySelectorAll('.btn-upload-foto, .btn-limpar-assinatura, .remover-foto, .controles-topo').forEach(el => el.style.display = '');
-            }
-        }
+                // Pega dados da NR
+                const dados = nrData[nr];
+                if (!dados) {
+                    alert('Dados da NR não encontrados.');
+                    return;
+                }
 
-        // ===================== LIMPAR TUDO =====================
-        function limparTudo() {
-            if (!confirm('⚠️ Limpar todos os dados?')) return;
-            document.querySelectorAll('#documento input[type="text"], #documento input[type="date"], #documento input[type="number"], #documento textarea').forEach(input => input.value = '');
-            document.querySelectorAll('#documento select').forEach(select => select.selectedIndex = 0);
-            document.getElementById('gradeFotos').innerHTML = '';
-            fotosAdicionadas.length = 0;
-            contadorFotos = 0;
-            Object.keys(assinaturas).forEach(id => assinaturas[id].limpar());
-            const hoje = new Date();
-            document.getElementById('data').value = hoje.toISOString().split('T')[0];
-            const dataFormatada = hoje.toISOString().slice(0, 10).replace(/-/g, '');
-            document.getElementById('numeroBdo').value = `BDO-${dataFormatada}-${String(Math.floor(Math.random()*999)+1).padStart(3,'0')}`;
-            document.getElementById('dataGeracao').textContent = hoje.toLocaleDateString('pt-BR') + ' às ' + hoje.toLocaleTimeString('pt-BR');
-            ['nomeTst','registroTst','nomeEng','registroEng','nomeMestre','registroMestre'].forEach(id => document.getElementById(id).value = '');
-            alert('✅ Campos limpos!');
-        }
+                // Substitui placeholders na página 1
+                document.getElementById('certNome').textContent = nome;
+                // Formata CPF com pontuação
+                const cpfFormatado = cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+                document.getElementById('certCpf').textContent = cpfFormatado;
+                document.getElementById('certTexto').textContent = dados.textoBase;
+                document.getElementById('certData').textContent = `Foz do Iguaçu, ${dataFormatada}`;
 
-        // Atualizar data/hora a cada 30s
-        setInterval(() => {
-            const hoje = new Date();
-            document.getElementById('dataGeracao').textContent = hoje.toLocaleDateString('pt-BR') + ' às ' + hoje.toLocaleTimeString('pt-BR');
-        }, 30000);
+                // Conteúdo da página 2
+                const lista = dados.conteudo;
+                let htmlList = '<ol>';
+                lista.forEach(item => {
+                    htmlList += `<li>${item}</li>`;
+                });
+                htmlList += '</ol>';
+                document.getElementById('conteudoLista').innerHTML = htmlList;
+
+                // Exibe a div do certificado (temporariamente) para capturar
+                const wrapper = document.getElementById('certificateWrapper');
+                wrapper.style.display = 'block';
+
+                // Gera PDF com html2pdf
+                const opt = {
+                    margin:        [0, 0, 0, 0], // sem margens extras (já temos padding nas páginas)
+                    filename:     `Certificado_NR_${nome.replace(/\s/g, '_')}.pdf`,
+                    image:        { type: 'jpeg', quality: 0.98 },
+                    html2canvas:  { scale: 2, letterRendering: true, useCORS: true },
+                    jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
+                    pagebreak:    { mode: ['css', 'legacy'] }
+                };
+
+                html2pdf().set(opt).from(wrapper).save().then(function() {
+                    // Oculta novamente após salvar
+                    wrapper.style.display = 'none';
+                }).catch(function(err) {
+                    console.error('Erro ao gerar PDF:', err);
+                    alert('Ocorreu um erro ao gerar o PDF. Verifique o console.');
+                    wrapper.style.display = 'none';
+                });
+            });
+        })();
     </script>
 </body>
 </html>
