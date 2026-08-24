@@ -121,6 +121,61 @@
             page-break-after: avoid;
         }
 
+        /* Cabeçalho com logo e título */
+        .cert-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 3px double #c9a84c;
+            padding-bottom: 12px;
+            margin-bottom: 28px;
+        }
+        .logo-area {
+            flex: 0 0 80px;
+            text-align: center;
+        }
+        .logo-area img {
+            max-width: 70px;
+            max-height: 70px;
+            display: block;
+            margin: 0 auto;
+        }
+        .logo-placeholder {
+            width: 70px;
+            height: 70px;
+            background: #e8e0d4;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: #7a6a5a;
+            text-align: center;
+            font-weight: bold;
+            border: 2px dashed #c9a84c;
+            margin: 0 auto;
+        }
+        .titulo-area {
+            flex: 1;
+            text-align: center;
+        }
+        .titulo-area h2 {
+            font-size: 22px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #1a2a4a;
+            margin: 0;
+        }
+        .titulo-area small {
+            display: block;
+            font-size: 13px;
+            font-weight: normal;
+            letter-spacing: 1px;
+            color: #5a6f8c;
+            margin-top: 2px;
+        }
+
         /* Selo decorativo */
         .cert-seal {
             position: absolute;
@@ -142,27 +197,6 @@
         }
         .cert-seal span {
             transform: rotate(8deg);
-        }
-
-        .cert-header {
-            text-align: center;
-            font-size: 24px;
-            font-weight: bold;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            color: #1a2a4a;
-            border-bottom: 3px double #c9a84c;
-            padding-bottom: 14px;
-            margin-bottom: 28px;
-            position: relative;
-        }
-        .cert-header small {
-            display: block;
-            font-size: 14px;
-            font-weight: normal;
-            letter-spacing: 1px;
-            color: #5a6f8c;
-            margin-top: 4px;
         }
 
         .cert-body {
@@ -219,7 +253,6 @@
             margin-top: 28px;
             border-top: 1px solid #d6ccbc;
             padding-top: 18px;
-            font-size: 15px;
             text-align: center;
             color: #2a3a4a;
         }
@@ -231,6 +264,28 @@
             font-size: 13px;
             color: #4f637a;
             margin-top: 4px;
+        }
+        .cert-footer .assinatura-tecnico {
+            margin-top: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .cert-footer .assinatura-tecnico img {
+            max-width: 160px;
+            max-height: 50px;
+            margin-bottom: 4px;
+        }
+        .assinatura-placeholder {
+            width: 160px;
+            height: 50px;
+            border-bottom: 2px solid #6f7a8a;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            font-size: 13px;
+            color: #6f7a8a;
+            font-style: italic;
         }
 
         /* Página de conteúdo */
@@ -300,7 +355,7 @@
             <button type="submit" class="btn">Gerar PDF</button>
         </form>
         <div class="info">
-            O PDF será gerado com certificado + conteúdo programático.
+            PDF com 2 páginas: certificado + conteúdo programático.
         </div>
     </div>
 
@@ -309,10 +364,24 @@
         <!-- Página 1: Certificado -->
         <div class="cert-page" id="page1">
             <div class="cert-seal"><span>★</span></div>
+
+            <!-- Cabeçalho com logo e título -->
             <div class="cert-header">
-                CLUB RESIDENCE GRAND SOLARIS
-                <small>Certificado de Treinamento</small>
+                <div class="logo-area">
+                    <!-- 
+                        ⬇️ SUBSTITUA A IMAGEM ABAIXO PELA LOGO REAL DA LIMASEG 
+                        Você pode usar uma URL externa ou uma imagem em base64.
+                        Exemplo: <img src="caminho/logo_limaseg.png" alt="LIMASEG">
+                    -->
+                    <div class="logo-placeholder">LOGO<br>LIMASEG</div>
+                    <!-- <img src="logo_limaseg.png" alt="LIMASEG"> -->
+                </div>
+                <div class="titulo-area">
+                    <h2>CLUB RESIDENCE GRAND SOLARIS</h2>
+                    <small>Certificado de Treinamento</small>
+                </div>
             </div>
+
             <div class="cert-body">
                 <p>
                     Certificamos para os devidos fins que o Sr.(a) 
@@ -333,10 +402,21 @@
                 <span style="font-size:13px; color:#5f738d;">(reconhecimento da participação)</span>
             </div>
 
+            <!-- Rodapé com instrutor e assinatura digital -->
             <div class="cert-footer">
                 <div class="instrutor">Agnaldo Fernando de Lima Junior</div>
                 <div class="registro">Técnico em Segurança do Trabalho – Reg. 0073883/SP - MTE</div>
-                <div style="margin-top:6px; font-size:13px; color:#4f637a;">Instrutor e Responsável Técnico</div>
+                <div style="margin-top:4px; font-size:13px; color:#4f637a;">Instrutor e Responsável Técnico</div>
+
+                <!-- Assinatura do técnico (imagem) -->
+                <div class="assinatura-tecnico">
+                    <!-- 
+                        ⬇️ SUBSTITUA A IMAGEM ABAIXO PELA ASSINATURA DIGITAL DO TÉCNICO 
+                        Exemplo: <img src="assinatura_agnaldo.png" alt="Assinatura do Técnico">
+                    -->
+                    <div class="assinatura-placeholder">Assinatura do Técnico</div>
+                    <!-- <img src="assinatura_agnaldo.png" alt="Assinatura do Técnico"> -->
+                </div>
             </div>
         </div>
 
@@ -354,8 +434,6 @@
             // Dados das NRs
             const nrData = {
                 nr06: {
-                    titulo: 'Treinamento e Uso, Conservação e Higienização de EPI’S',
-                    carga: '02',
                     textoBase: 'concluiu com êxito o Treinamento e Uso, Conservação e Higienização de EPI’S, ministrado por Profissional Habilitado em Segurança do Trabalho, com carga horária de 02 horas, recebendo o presente Certificado para que surtam os efeitos legais.',
                     conteudo: [
                         'Definições da Norma Regulamentadora N°06',
@@ -366,8 +444,6 @@
                     ]
                 },
                 nr12: {
-                    titulo: 'Segurança na Operação de Máquinas Rotativas',
-                    carga: '02',
                     textoBase: 'participou do treinamento “Segurança na Operação de Máquinas Rotativas”, com carga horária de 02 horas, recebendo o presente Certificado para que surtam os efeitos legais.',
                     conteudo: [
                         'Tipos de EPI\'S (Equipamento de Proteção Individual) e EPC (Equipamento de Proteção Coletiva)',
@@ -381,8 +457,6 @@
                     ]
                 },
                 nr18: {
-                    titulo: 'Treinamento Inicial de Segurança do Trabalho NR-18',
-                    carga: '04',
                     textoBase: 'concluiu com êxito o treinamento inicial de segurança do trabalho da NR-18, ministrado por Profissional Habilitado em Segurança do Trabalho, com carga horária de 04 horas, recebendo o presente Certificado para que surtam os efeitos legais.',
                     conteudo: [
                         'PGR (Programa de Gerenciamento de Risco)',
@@ -402,8 +476,6 @@
                     ]
                 },
                 nr35: {
-                    titulo: 'Trabalho em Altura',
-                    carga: '08',
                     textoBase: 'participou do curso de Trabalho em Altura, ministrado por Profissional Habilitado em Segurança do Trabalho, com carga horária de 08 horas, conforme exigência da NR-35, recebendo o presente Certificado para que surtam os efeitos legais.',
                     conteudo: [
                         'Norma e Regulamentos Aplicáveis ao Trabalho em Altura',
