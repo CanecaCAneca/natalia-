@@ -125,15 +125,13 @@
             display: none;
             overflow: hidden;
             width: 297mm;
-            height: 210mm;
-            /* exatamente uma página A4 paisagem */
+            height: 210mm;      /* exatamente uma página A4 paisagem */
         }
 
         .cert-page {
             width: 297mm;
             height: 210mm;
-            padding: 10mm 14mm;
-            /* padding reduzido para caber mais conteúdo */
+            padding: 8mm 10mm;   /* padding reduzido para maximizar espaço */
             margin: 0;
             background: #fcf9f2;
             font-family: 'Georgia', 'Times New Roman', Times, serif;
@@ -142,43 +140,38 @@
             position: relative;
             border: 3px solid #c9a84c;
             border-radius: 8px;
-            box-shadow: 0 0 0 8px #f5efe6, 0 0 0 11px #c9a84c;
+            box-shadow: 0 0 0 6px #f5efe6, 0 0 0 9px #c9a84c;
             background-image: radial-gradient(ellipse at 20% 50%, rgba(201, 168, 76, 0.05) 0%, transparent 60%),
                 radial-gradient(ellipse at 80% 50%, rgba(201, 168, 76, 0.05) 0%, transparent 60%);
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             flex-shrink: 0;
-            overflow: hidden;
+            overflow: hidden;    /* garante que nada vaze */
         }
 
+        /* Cabeçalho */
         .cert-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
             border-bottom: 2px double #c9a84c;
-            padding-bottom: 6px;
-            margin-bottom: 8px;
+            padding-bottom: 4px;
+            margin-bottom: 6px;
         }
         .logo-area {
-            flex: 0 0 60px;
+            flex: 0 0 50px;
             text-align: center;
         }
-        .logo-area img {
-            max-width: 50px;
-            max-height: 50px;
-            display: block;
-            margin: 0 auto;
-        }
         .logo-placeholder {
-            width: 50px;
-            height: 50px;
+            width: 45px;
+            height: 45px;
             background: #e8e0d4;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 8px;
+            font-size: 7px;
             color: #7a6a5a;
             text-align: center;
             font-weight: bold;
@@ -190,7 +183,7 @@
             text-align: center;
         }
         .titulo-area h2 {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: bold;
             letter-spacing: 2px;
             text-transform: uppercase;
@@ -199,26 +192,27 @@
         }
         .titulo-area small {
             display: block;
-            font-size: 11px;
+            font-size: 10px;
             font-weight: normal;
             letter-spacing: 1px;
             color: #6a7f9a;
-            margin-top: 2px;
+            margin-top: 1px;
         }
 
+        /* Selo decorativo */
         .cert-seal {
             position: absolute;
-            top: 10mm;
-            right: 12mm;
-            width: 50px;
-            height: 50px;
+            top: 8mm;
+            right: 10mm;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             background: radial-gradient(circle, #f5efe6 58%, #c9a84c 60%, #c9a84c 72%, #f5efe6 74%);
-            border: 3px solid #b8942e;
+            border: 2px solid #b8942e;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
+            font-size: 18px;
             color: #b8942e;
             font-weight: bold;
             box-shadow: 0 0 0 2px #fff, 0 0 0 4px #c9a84c;
@@ -228,11 +222,12 @@
             transform: rotate(6deg);
         }
 
+        /* Corpo do certificado */
         .cert-body {
-            font-size: 15px;
-            line-height: 1.4;
+            font-size: 13px;
+            line-height: 1.3;
             text-align: justify;
-            padding: 4px 2px;
+            padding: 2px 0;
             flex: 1;
             display: flex;
             flex-direction: column;
@@ -244,16 +239,16 @@
         }
         .cert-body .empresa {
             display: block;
-            margin-top: 4px;
+            margin-top: 2px;
             font-weight: normal;
             color: #2a4a6e;
-            font-size: 13px;
+            font-size: 11px;
         }
         .cert-body .data-local {
             text-align: right;
             font-weight: normal;
-            margin-top: 8px;
-            font-size: 14px;
+            margin-top: 4px;
+            font-size: 12px;
             font-style: italic;
             color: #2c3e50;
         }
@@ -261,31 +256,33 @@
             font-style: normal;
         }
 
+        /* Área de assinatura do participante */
         .assinatura-area {
-            margin-top: 6px;
-            padding-top: 6px;
+            margin-top: 4px;
+            padding-top: 4px;
             border-top: 1px dashed #b0a89a;
             display: flex;
             flex-direction: column;
             align-items: center;
-            font-size: 12px;
+            font-size: 10px;
             color: #3d4a5a;
         }
         .assinatura-area .linha-ass {
-            width: 40%;
+            width: 35%;
             border-bottom: 1px dotted #6f7a8a;
-            margin: 5px auto 2px;
+            margin: 3px auto 1px;
         }
         .assinatura-area .label-ass {
-            font-size: 12px;
-            letter-spacing: 1px;
+            font-size: 10px;
+            letter-spacing: 0.5px;
             color: #4a5a6a;
         }
 
+        /* Rodapé com assinatura do técnico */
         .cert-footer {
-            margin-top: 4px;
+            margin-top: 2px;
             border-top: 1px solid #d6ccbc;
-            padding-top: 6px;
+            padding-top: 3px;
             text-align: center;
             color: #2a3a4a;
             display: flex;
@@ -294,56 +291,52 @@
         }
         .cert-footer .instrutor {
             font-weight: bold;
-            font-size: 14px;
+            font-size: 12px;
         }
         .cert-footer .registro {
-            font-size: 11px;
+            font-size: 9px;
             color: #4f637a;
             margin-top: 1px;
         }
-        .cert-footer .assinatura-tecnico {
-            margin-top: 4px;
+        .assinatura-tecnico {
+            margin-top: 2px;
             display: flex;
             flex-direction: column;
             align-items: center;
         }
-        .cert-footer .assinatura-tecnico img {
-            max-width: 140px;
-            max-height: 40px;
-            margin-bottom: 2px;
-        }
         .assinatura-placeholder {
-            width: 140px;
-            height: 35px;
+            width: 120px;
+            height: 30px;
             border-bottom: 1px solid #6f7a8a;
             display: flex;
             align-items: flex-end;
             justify-content: center;
-            font-size: 11px;
+            font-size: 9px;
             color: #6f7a8a;
             font-style: italic;
         }
 
         /* Conteúdo programático integrado */
         .conteudo-integrado {
-            margin-top: 6px;
-            border-top: 2px double #c9a84c;
-            padding-top: 6px;
+            margin-top: 2px;
+            border-top: 1px solid #c9a84c;
+            padding-top: 2px;
             display: flex;
-            gap: 15px;
-            font-size: 10px;
-            line-height: 1.25;
-            max-height: 140px;
-            /* limite para não estourar */
+            flex-wrap: wrap;
+            gap: 8px;
+            font-size: 9px;
+            line-height: 1.15;
+            max-height: 90px;   /* limite máximo para não estourar */
+            overflow: hidden;   /* esconde qualquer excesso (não deve ocorrer) */
         }
         .conteudo-integrado .titulo-conteudo {
-            font-size: 13px;
-            font-weight: bold;
+            width: 100%;
             text-align: center;
+            font-weight: bold;
+            font-size: 11px;
             letter-spacing: 1px;
             color: #1a2a4a;
-            margin-bottom: 4px;
-            width: 100%;
+            margin-bottom: 2px;
         }
         .conteudo-col {
             flex: 1;
@@ -351,11 +344,11 @@
         }
         .conteudo-col ol {
             list-style-type: decimal;
-            padding-left: 15px;
+            padding-left: 14px;
             margin: 0;
         }
         .conteudo-col li {
-            margin-bottom: 2px;
+            margin-bottom: 1px;
             break-inside: avoid;
         }
         .conteudo-col li::marker {
@@ -363,7 +356,7 @@
             font-weight: bold;
         }
 
-        /* Garante que, na impressão, o wrapper seja mostrado */
+        /* Impressão */
         @media print {
             body {
                 background: white;
@@ -396,7 +389,6 @@
                     <option value="nr18">NR-18 (Segurança do Trabalho)</option>
                     <option value="nr35">NR-35 (Trabalho em Altura)</option>
                 </select>
-                <!-- Pré-visualização do conteúdo programático -->
                 <div id="previewBox" class="preview-box"></div>
             </div>
             <div class="form-group">
@@ -415,9 +407,9 @@
                 <label for="data">Data do Certificado</label>
                 <input type="date" id="data" required />
             </div>
-            <button type="submit" class="btn">✨ Gerar PDF Horizontal (1 página)</button>
+            <button type="submit" class="btn">✨ Gerar PDF (1 página)</button>
         </form>
-        <div class="info">PDF com exatamente 1 página (certificado + conteúdo programático integrados).</div>
+        <div class="info">PDF em uma única página horizontal A4, com todo o conteúdo integrado.</div>
     </div>
 
     <!-- Estrutura do certificado (oculta) -->
@@ -427,10 +419,7 @@
 
             <div class="cert-header">
                 <div class="logo-area">
-                    <!-- 
-                        ⬇️ SUBSTITUA PELA LOGO REAL DA LIMASEG 
-                        Ex: <img src="logo_limaseg.png" alt="LIMASEG" />
-                    -->
+                    <!-- Substitua pela logo real: <img src="logo_limaseg.png" alt="LIMASEG" /> -->
                     <div class="logo-placeholder">LOGO<br />LIMASEG</div>
                 </div>
                 <div class="titulo-area">
@@ -455,19 +444,16 @@
             <div class="assinatura-area">
                 <span class="label-ass">Assinatura do Participante</span>
                 <div class="linha-ass"></div>
-                <span style="font-size:11px; color:#5f738d;">(reconhecimento da participação)</span>
+                <span style="font-size:9px; color:#5f738d;">(reconhecimento da participação)</span>
             </div>
 
             <div class="cert-footer">
                 <div class="instrutor">Agnaldo Fernando de Lima Junior</div>
                 <div class="registro">Técnico em Segurança do Trabalho – Reg. 0073883/SP - MTE</div>
-                <div style="font-size:11px; color:#4f637a; margin-top:1px;">Instrutor e Responsável Técnico</div>
+                <div style="font-size:9px; color:#4f637a; margin-top:1px;">Instrutor e Responsável Técnico</div>
 
                 <div class="assinatura-tecnico">
-                    <!-- 
-                        ⬇️ SUBSTITUA PELA ASSINATURA DIGITAL DO TÉCNICO 
-                        Ex: <img src="assinatura_agnaldo.png" alt="Assinatura do Técnico" />
-                    -->
+                    <!-- Substitua pela assinatura digital: <img src="assinatura_agnaldo.png" alt="Assinatura do Técnico" /> -->
                     <div class="assinatura-placeholder">Assinatura do Técnico</div>
                 </div>
             </div>
@@ -495,12 +481,12 @@
                 nr12: {
                     textoBase: 'participou do treinamento “Segurança na Operação de Máquinas Rotativas”, com carga horária de 02 horas, recebendo o presente Certificado para que surtam os efeitos legais.',
                     conteudo: [
-                        'Tipos de EPI\'S (Equipamento de Proteção Individual) e EPC (Equipamento de Proteção Coletiva)',
-                        'Riscos de Acidente no Trabalho com Máquinas Rotativas (Mecânicos, Elétricos, entre outros) e Proteções Específicas de cada máquina',
+                        'Tipos de EPI\'S e EPC',
+                        'Riscos de Acidente no Trabalho com Máquinas Rotativas e Proteções Específicas',
                         'Manutenção de Máquinas Somente Profissional Habilitado',
                         'Dispositivos de Proteção de Máquinas',
-                        'Orientação Quanto ao não uso de Roupas Largas e Adornos nos Trabalhos com Máquinas Rotativas',
-                        'Segurança na Operação de Máquinas como (Makita, Esmerilhadeira, Perfuratriz, Furadeira de Impacto, Lixadeira, Rompedor, Compactador, Vibrador)',
+                        'Orientação Quanto ao não uso de Roupas Largas e Adornos',
+                        'Segurança na Operação de Máquinas (Makita, Esmerilhadeira, Perfuratriz, Furadeira, Lixadeira, Rompedor, Compactador, Vibrador)',
                         'Permissão de Trabalho',
                         'Sistema de Bloqueio (Desenergização) de Operação de Inspeção, Limpeza, Lubrificação e Manutenção'
                     ]
@@ -560,7 +546,7 @@
             const dia = String(hoje.getDate()).padStart(2, '0');
             dataInput.value = `${ano}-${mes}-${dia}`;
 
-            // Atualiza pré-visualização ao selecionar NR
+            // Atualiza pré-visualização
             nrSelect.addEventListener('change', function() {
                 const nr = nrSelect.value;
                 if (nr && nrData[nr]) {
@@ -599,7 +585,7 @@
                 const dados = nrData[nr];
                 if (!dados) { alert('Dados da NR não encontrados.'); return; }
 
-                // Preenche dados do certificado
+                // Preenche dados
                 document.getElementById('certNome').textContent = nome;
                 const cpfFormatado = cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
                 document.getElementById('certCpf').textContent = cpfFormatado;
@@ -614,7 +600,7 @@
                     empDiv.style.display = 'none';
                 }
 
-                // Preenche conteúdo programático integrado (duas colunas)
+                // Preenche conteúdo programático (duas colunas)
                 const lista = dados.conteudo;
                 const metade = Math.ceil(lista.length / 2);
                 const col1Itens = lista.slice(0, metade);
@@ -628,7 +614,7 @@
                 };
 
                 document.getElementById('conteudoIntegrado').innerHTML = `
-                    <div style="width:100%; text-align:center; font-weight:bold; font-size:12px; letter-spacing:1px; color:#1a2a4a; margin-bottom:2px;">Conteúdo Programático</div>
+                    <div class="titulo-conteudo">Conteúdo Programático</div>
                     <div class="conteudo-col">${buildOl(col1Itens)}</div>
                     <div class="conteudo-col">${buildOl(col2Itens)}</div>
                 `;
@@ -652,7 +638,7 @@
                         format: 'a4',
                         orientation: 'landscape'
                     },
-                    pagebreak: { mode: ['css', 'legacy'] } // não deve quebrar, mas mantemos
+                    pagebreak: { mode: ['css', 'legacy'] }
                 };
 
                 html2pdf().set(opt).from(wrapper).save().then(() => {
